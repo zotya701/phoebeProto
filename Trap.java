@@ -6,7 +6,7 @@ import java.util.List;
 /**
  *
  */
-public interface Trap {
+public interface Trap extends Landable{
 	
 	/**
 	 * 
