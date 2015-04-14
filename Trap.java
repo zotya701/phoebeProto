@@ -10,12 +10,6 @@ public interface Trap extends Landable{
 	
 	/**
 	 * 
-	 * @param j
-	 */
-	public void interact(Jumping j);
-	
-	/**
-	 * 
 	 * @param nf
 	 */
 	public void setNormalField(NormalField nf);
