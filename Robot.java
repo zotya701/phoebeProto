@@ -69,14 +69,16 @@ public class Robot implements Landable, Jumping{
 	 * @param vel
 	 */
 	public Robot(Map map, Point pos, Point vel){
+		this.state			=	RobotState.Normal;
 		this.map			=	map;
 		this.position		=	pos;
 		this.velocity		=	vel;
 		this.routeTravelled	=	0;
 		this.gooTraps		=	3;
 		this.oilTraps		=	3;
-		Robot.statid		=	Robot.statid+1;
 		this.id				=	Robot.statid;
+		Robot.statid		=	Robot.statid+1;
+		this.map.getField(this.position).arrived(this);
 	}
 	
 	/**
@@ -107,7 +109,7 @@ public class Robot implements Landable, Jumping{
 			state="normal";
 		else if(this.state==RobotState.Unturnable)
 			state="unturnable";
-		System.out.println("Robot id:"+this.id+" pos:("+this.velocity.x+","+this.velocity.y+") route: "+this.routeTravelled+" goo:"+this.gooTraps+" oil:"+this.oilTraps+" state:"+state);					
+		System.out.println("Robot id:"+this.id+" pos:("+this.position.x+","+this.position.y+") vel:("+this.velocity.x+","+this.velocity.y+") route: "+this.routeTravelled+" goo:"+this.gooTraps+" oil:"+this.oilTraps+" state:"+state);					
 	}
 	
 	/**
