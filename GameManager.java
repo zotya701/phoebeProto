@@ -59,7 +59,7 @@ public class GameManager {
 	/**
 	 * 
 	 */
-	public void GameManager(){
+	public GameManager(){
 		this.currentPlayer		=	0;
 		this.round				=	0;
 		this.robotsEliminated	=	new boolean[4];
@@ -67,7 +67,10 @@ public class GameManager {
 		this.trapList			=	new ArrayList<Trap>();
 		this.cleaners			=	new ArrayList<Cleaner>();
 		this.robots				=	new ArrayList<Robot>(4);
-		this.map				=	new Map("test.map", trapList);
+		Goo.trapList			=	this.trapList;
+		Oil.trapList			=	this.trapList;
+		Oil.oilList				=	this.oilList;
+		this.map				=	new Map("test.map", this.trapList);
 	}
 
 	/**
