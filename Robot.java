@@ -2,6 +2,9 @@ package phoebeProto;
 
 import java.awt.Point;
 
+/**
+ * 
+ */
 public class Robot implements Landable, Jumping{
 	
 //privát adattagok kezdete
@@ -69,14 +72,17 @@ public class Robot implements Landable, Jumping{
 	 * @param vel
 	 */
 	public Robot(Map map, Point pos, Point vel){
+		this.state			=	RobotState.Normal;
 		this.map			=	map;
 		this.position		=	pos;
 		this.velocity		=	vel;
 		this.routeTravelled	=	0;
 		this.gooTraps		=	3;
 		this.oilTraps		=	3;
-		Robot.statid		=	Robot.statid+1;
+		this.onOil			=	false;
 		this.id				=	Robot.statid;
+		Robot.statid		=	Robot.statid+1;
+		this.map.getField(this.position).arrived(this);
 	}
 	
 	/**
@@ -107,7 +113,7 @@ public class Robot implements Landable, Jumping{
 			state="normal";
 		else if(this.state==RobotState.Unturnable)
 			state="unturnable";
-		System.out.println("Robot id:"+this.id+" pos:("+this.velocity.x+","+this.velocity.y+") route: "+this.routeTravelled+" goo:"+this.gooTraps+" oil:"+this.oilTraps+" state:"+state);					
+		System.out.println("Robot id:"+this.id+" pos:("+this.position.x+","+this.position.y+") vel:("+this.velocity.x+","+this.velocity.y+") route: "+this.routeTravelled+" goo:"+this.gooTraps+" oil:"+this.oilTraps+" state:"+state);					
 	}
 	
 	/**
@@ -153,8 +159,12 @@ public class Robot implements Landable, Jumping{
 	 * 
 	 * @param goo
 	 */
-	public void placeGoo(Goo goo){
-		
+	public void placeGoo(){
+		if(this.gooTraps>0){
+			Goo goo=new Goo(this.position);
+			this.currentField.addTrap(goo);
+			this.gooTraps	=	this.gooTraps-1;
+		}
 	}
 	
 	/**
@@ -170,15 +180,18 @@ public class Robot implements Landable, Jumping{
 			r.destroy();
 			this.halveSpeed();
 		}
-		
 	}
 	
 	/**
 	 * 
 	 * @param oil
 	 */
-	public void placeOil(Oil oil){
-		this.currentField.addTrap(oil);
+	public void placeOil(){
+		if(this.gooTraps>0){
+			Oil oil=new Oil(this.position);
+			this.currentField.addTrap(oil);
+			this.oilTraps	=	this.oilTraps-1;
+		}
 	}
 	
 	/**

@@ -51,7 +51,7 @@ public class Oil implements Trap{
 	 * 
 	 */
 	public void Print(){
-		System.out.println("Trap Oil ("+this.position.x+","+this.position.y+") health: "+this.health);
+		System.out.println("Trap oil ("+this.position.x+","+this.position.y+") health: "+this.health);
 	}
 
 	/**
