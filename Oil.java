@@ -24,17 +24,17 @@ public class Oil implements Trap{
 	 * 
 	 */
 	private int health;
-
-	/**
-	 * 
-	 */
-	static private List<Oil> oilList=new ArrayList<Oil>();
+//privát adattagok vége
 	
 	/**
 	 * 
 	 */
-	static private List<Trap> trapList=new ArrayList<Trap>();
-//privát adattagok vége
+	static public List<Oil> oilList=new ArrayList<Oil>();
+	
+	/**
+	 * 
+	 */
+	static public List<Trap> trapList=new ArrayList<Trap>();
 	
 //publikus metódusok kezdete
 	/**

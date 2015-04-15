@@ -24,12 +24,12 @@ public class Goo implements Trap{
 	 * 
 	 */
 	private int health;
-
+//privát adattagok vége
+	
 	/**
 	 * 
 	 */
-	static private List<Trap> trapList=new ArrayList<Trap>();
-//privát adattagok vége
+	static public List<Trap> trapList=new ArrayList<Trap>();
 	
 //publikus metódusok kezdete
 	/**
