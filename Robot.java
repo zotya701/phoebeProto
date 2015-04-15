@@ -122,7 +122,7 @@ public class Robot implements Landable, Jumping{
 		if(this.routeTravelled==0)
 			format	=	new DecimalFormat("0.#");
 		format.setDecimalFormatSymbols(dfs);
-		System.out.println("Robot id:"+this.id+" pos:("+this.position.x+","+this.position.y+") vel:("+this.velocity.x+","+this.velocity.y+") route: "+format.format(this.routeTravelled)+" goo:"+this.gooTraps+", oil:"+this.oilTraps+" state:"+state);					
+		System.out.println("Robot id:"+this.id+" pos:("+this.position.x+","+this.position.y+") vel:("+this.velocity.x+","+this.velocity.y+") route: "+format.format(this.routeTravelled)+" goo:"+this.gooTraps+" oil:"+this.oilTraps+" state:"+state);					
 	}
 	
 	/**
