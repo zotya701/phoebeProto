@@ -1,5 +1,6 @@
 package phoebeProto;
 
+import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -80,16 +81,18 @@ public class GameManager {
 	public void LoadMap(String filename){
 		try {
 			if(new File(filename+".map").exists()){											//akkor töltse be az adatokat ha van honnan
-				this.map			=	new Map(filename+".map", trapList);					//létrehoz egy pályát a filename fájlból
+				this.map	=	new Map(filename+".map", trapList);					//létrehoz egy pályát a filename fájlból
 				File robotsFile=new File(filename+".robots");
 				if(robotsFile.exists()){													//ha létezik a robotok adatait tartalmazó fájl
-					BufferedReader BR = new BufferedReader(new FileReader(robotsFile));
+					Robot.statid=0;
+					BufferedReader BR	=	new BufferedReader(new FileReader(robotsFile));
 				    while(BR.ready()){														//amíg van adat a robotok adatait tartalmazó fájlban
-				    	String[] robotParams=BR.readLine().split("\\s+");					//feldarabolja a beolvasott stringet space-enként
-				    	if(robotParams.length>=4){											//legalább 4 kell, mivel egy robotot 4 adattal lehet inicializálni
-				    		//this.robots.add(new Robot(robotParams[0], robotParams[1], robotParams[2], robotParams[3]));
+				    	String[] p=BR.readLine().split("\\s+");					//feldarabolja a beolvasott stringet space-enként
+				    	if(p.length>=4){											//legalább 4 kell
+				    		this.robots.add(new Robot(this.map, new Point(Integer.parseInt(p[0]), Integer.parseInt(p[1])), new Point(Integer.parseInt(p[2]), Integer.parseInt(p[3]))));
 				    	}
 				    }
+				    BR.close();
 				}
 			}
 		} catch (IOException e) {
@@ -121,13 +124,15 @@ public class GameManager {
 					if(splittedCommand.length>=2){													//ha legaláb 2 rész string maradt
 						File robotsFile=new File(splittedCommand[1]);
 						if(robotsFile.exists()){													//ha létezik a robotok adatait tartalmazó fájl
+							Robot.statid=0;
 							BufferedReader BR = new BufferedReader(new FileReader(robotsFile));
 						    while(BR.ready()){														//amíg van adat a robotok adatait tartalmazó fájlban
-						    	String[] robotParams=BR.readLine().split("\\s+");					//feldarabolja a beolvasott stringet space-enként
-						    	if(robotParams.length>=4){											//legalább 4 kell, mivel egy robotot 4 adattal lehet inicializálni
-						    		//this.robots.add(new Robot(robotParams[0], robotParams[1], robotParams[2], robotParams[3]));
+						    	String[] p=BR.readLine().split("\\s+");					//feldarabolja a beolvasott stringet space-enként
+						    	if(p.length>=4){											//legalább 4 kell, mivel egy robotot 4 adattal lehet inicializálni
+						    		this.robots.add(new Robot(this.map, new Point(Integer.parseInt(p[0]), Integer.parseInt(p[1])), new Point(Integer.parseInt(p[2]), Integer.parseInt(p[3]))));
 						    	}
 						    }
+						    BR.close();
 						}
 					}
 				}
@@ -158,13 +163,13 @@ public class GameManager {
 				}
 	//listTraps
 				else if(command.equals("listTraps")){
-					for(Trap trap : trapList)
-						trap.Print();
+					for(int i=this.trapList.size()-1;i>=0;--i)
+						this.trapList.get(i).Print();
 				}
 	//listRobots
 				else if(command.equals("listRobots")){
-					//for(Robot robot : robots)
-						//robot.Print();
+					for(Robot robot : robots)
+						robot.Print();
 				}
 	//listCleaners
 				else if(command.equals("listCleaners")){
