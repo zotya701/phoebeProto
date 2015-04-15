@@ -3,7 +3,6 @@ package phoebeProto;
 import java.awt.Point;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.util.Locale;
 
 /**
  * 
@@ -147,6 +146,10 @@ public class Robot implements Landable, Jumping{
 			this.position=this.map.getNewPos(this.position, this.velocity);
 			this.map.getField(this.position).arrived(this);
 			this.routeTravelled=this.map.calculateDistance(old, this.position);
+		}
+		if(this.state!=RobotState.Eliminated){
+			this.state=RobotState.Normal;
+			this.onOil=false;
 		}
 		return this.state;
 	}
