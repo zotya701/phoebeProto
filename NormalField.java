@@ -47,7 +47,15 @@ public class NormalField implements Field{
 	 * @param trap
 	 */
 	public void addTrap(Trap trap){
+		for(int i=0;i<this.elements.size();++i){
+			if(this.elements.get(i).gooType() || this.elements.get(i).oilType()){
+				if(((Trap)(this.elements.get(i))).compareType(trap)){
+					((Trap)(this.elements.get(i))).cleanup();
+				}
+			}
+		}
 		this.elements.add(trap);
+		trap.setNormalField(this);
 	}
 	
 	/**
