@@ -73,6 +73,7 @@ public class Map implements Printable{
 			    			this.fields.get(y).add(x, new NormalField());
 			    		}
 			    		else if(line.charAt(x)=='#'){
+			    			this.fields.get(y).add(x, this.outside);
 			    		}
 			    		else if(line.charAt(x)=='1'){
 			    			NormalField nf=new NormalField();
