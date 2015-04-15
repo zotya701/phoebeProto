@@ -163,12 +163,12 @@ public class GameManager {
 				}
 	//listTraps
 				else if(command.equals("listTraps")){
-					for(int i=this.trapList.size()-1;i>=0;--i)
-						this.trapList.get(i).Print();
+					for(Trap trap : this.trapList)
+						trap.Print();
 				}
 	//listRobots
 				else if(command.equals("listRobots")){
-					for(Robot robot : robots)
+					for(Robot robot : this.robots)
 						robot.Print();
 				}
 	//listCleaners
