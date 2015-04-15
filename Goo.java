@@ -45,7 +45,7 @@ public class Goo implements Trap{
 	 * 
 	 */
 	public void Print(){
-		System.out.println("Trap Goo ("+this.position.x+","+this.position.y+") health: "+this.health);
+		System.out.println("Trap goo ("+this.position.x+","+this.position.y+") health: "+this.health);
 	}
 
 	/**
