@@ -53,7 +53,7 @@ public class Map implements Printable{
 		this.nodes		=	new ArrayList<List<Node>>();
 		
 		try {
-			File map=new File(filename+".robots");
+			File map=new File(filename);
 			if(map.exists()){
 				BufferedReader br	=	new BufferedReader(new FileReader(map));
 				if(br.ready()){
@@ -98,7 +98,13 @@ public class Map implements Printable{
 	 * 
 	 */
 	public void Print(){
-		
+		System.out.println(this.size.x+" "+this.size.y);
+		for(int i=0;i<this.size.y;++i){
+			for(int j=0;j<this.size.x;++j){
+				this.fields.get(i).get(j).Print();
+			}
+			System.out.println();
+		}
 	}
 	
 	/**
