@@ -77,12 +77,12 @@ public class Map implements Printable{
 			    		}
 			    		else if(line.charAt(x)=='1'){
 			    			NormalField nf=new NormalField();
-			    			nf.addTrap(new Goo());
+			    			nf.addTrap(new Goo(new Point(x,y)));
 			    			this.fields.get(y).add(x, nf);
 			    		}
 			    		else if(line.charAt(x)=='2'){
 			    			NormalField nf=new NormalField();
-			    			nf.addTrap(new Oil());
+			    			nf.addTrap(new Oil(new Point(x,y)));
 			    			this.fields.get(y).add(x, nf);
 			    		}
 			    	}
