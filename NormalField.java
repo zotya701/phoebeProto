@@ -63,7 +63,7 @@ public class NormalField implements Field{
 	 * @param l
 	 */
 	public void staying(Landable l){
-		
+		this.elements.add(l);
 	}
 //publikus metódusok vége
 }
