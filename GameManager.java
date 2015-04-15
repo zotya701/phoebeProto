@@ -84,7 +84,7 @@ public class GameManager {
 				    while(BR.ready()){														//amíg van adat a robotok adatait tartalmazó fájlban
 				    	String[] robotParams=BR.readLine().split("\\s+");					//feldarabolja a beolvasott stringet space-enként
 				    	if(robotParams.length>=4){											//legalább 4 kell, mivel egy robotot 4 adattal lehet inicializálni
-				    		this.robots.add(new Robot(robotParams[0], robotParams[1], robotParams[2], robotParams[3]));
+				    		//this.robots.add(new Robot(robotParams[0], robotParams[1], robotParams[2], robotParams[3]));
 				    	}
 				    }
 				}
@@ -122,7 +122,7 @@ public class GameManager {
 						    while(BR.ready()){														//amíg van adat a robotok adatait tartalmazó fájlban
 						    	String[] robotParams=BR.readLine().split("\\s+");					//feldarabolja a beolvasott stringet space-enként
 						    	if(robotParams.length>=4){											//legalább 4 kell, mivel egy robotot 4 adattal lehet inicializálni
-						    		this.robots.add(new Robot(robotParams[0], robotParams[1], robotParams[2], robotParams[3]));
+						    		//this.robots.add(new Robot(robotParams[0], robotParams[1], robotParams[2], robotParams[3]));
 						    	}
 						    }
 						}
@@ -146,6 +146,7 @@ public class GameManager {
 				}
 	//exit
 				else if(command.equals("exit")){
+					br.close();
 					System.exit(0);
 				}
 	//showMap
@@ -159,19 +160,18 @@ public class GameManager {
 				}
 	//listRobots
 				else if(command.equals("listRobots")){
-					for(Robot robot : robots)
-						robot.Print();
+					//for(Robot robot : robots)
+						//robot.Print();
 				}
 	//listCleaners
 				else if(command.equals("listCleaners")){
-					for(Cleaner cleaner : cleaners)
-						cleaner.Print();
+					//for(Cleaner cleaner : cleaners)
+						//cleaner.Print();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-		br.close();
 	}
 
 	/**
