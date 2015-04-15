@@ -53,6 +53,15 @@ public class Oil implements Trap{
 	public void Print(){
 		System.out.println("Trap oil ("+this.position.x+","+this.position.y+") health: "+this.health);
 	}
+	
+	/**
+	 * 
+	 */
+	public void roundElapse(){
+		this.health=this.health-1;
+		if(this.health==0)
+			this.cleanup();
+	}
 
 	/**
 	 * 
