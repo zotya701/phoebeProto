@@ -51,6 +51,8 @@ public class Map implements Printable{
 		this.outside	=	new OutsideField();
 		this.fields		=	new ArrayList<List<Field>>();
 		this.nodes		=	new ArrayList<List<Node>>();
+		Oil.trapList.clear();
+		Oil.oilList.clear();
 		
 		try {
 			File map=new File(filename);
