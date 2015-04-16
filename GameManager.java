@@ -35,11 +35,6 @@ public class GameManager {
 	 * 
 	 */
 	private int round;
-
-	/**
-	 * 
-	 */
-	private boolean[] robotsEliminated;
 //privát adattagok vége
 
 //statikus adattagok kezdete
@@ -66,7 +61,6 @@ public class GameManager {
 	public GameManager(){
 		this.currentPlayer		=	0;
 		this.round				=	0;
-		this.robotsEliminated	=	new boolean[4];
 		this.robots				=	new ArrayList<Robot>(4);
 		this.map				=	new Map("test.map");
 	}
@@ -124,6 +118,7 @@ public class GameManager {
 						File robotsFile=new File(splittedCommand[1]);
 						if(robotsFile.exists()){													//ha létezik a robotok adatait tartalmazó fájl
 							Robot.statid=0;
+							this.robots.clear();
 							BufferedReader BR = new BufferedReader(new FileReader(robotsFile));
 						    while(BR.ready()){														//amíg van adat a robotok adatait tartalmazó fájlban
 						    	String[] p=BR.readLine().split("\\s+");								//feldarabolja a beolvasott stringet space-enként
@@ -141,7 +136,30 @@ public class GameManager {
 				}
 	//step
 				else if(command.contains("step")){
-					
+					splittedCommand=command.split("\\s+");
+					if(splittedCommand.length>=2){
+						int i=Integer.parseInt(splittedCommand[1]);
+						for(int a=0;a<i;++a){
+							Cleaner[] cleanersArr=GameManager.cleaners.toArray(new Cleaner[GameManager.cleaners.size()]);
+							for(int j=0;j<cleanersArr.length;++j){
+								cleanersArr[j].move();
+							}
+							Oil[] oils=GameManager.oilList.toArray(new Oil[GameManager.oilList.size()]);
+							for(int j=0;j<oils.length;++j){
+								oils[j].roundElapsed();
+							}
+							int robotsAlive=0;
+							for(Robot r : this.robots){
+								if(r.isAlive()){
+									robotsAlive=robotsAlive+1;
+								}
+							}
+							round=round+1;
+							if(round>=20 || robotsAlive<=1){
+								this.end();
+							}
+						}
+					}
 				}
 	//jump
 				else if(command.contains("jump")){
