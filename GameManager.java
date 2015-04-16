@@ -172,7 +172,12 @@ public class GameManager {
 				}
 	//addCleaner
 				else if(command.contains("addCleaner")){
-					
+					splittedCommand=command.split("\\s+");
+					if(splittedCommand.length>=3){
+						int x	=	Integer.parseInt(splittedCommand[1]);
+						int y	=	Integer.parseInt(splittedCommand[2]);
+						GameManager.cleaners.add(new Cleaner(this.map, new Point(x, y)));
+					}
 				}
 	//exit
 				else if(command.equals("exit")){

@@ -185,8 +185,8 @@ public class Robot implements Landable, Jumping{
 	public void placeGoo(){
 		if(this.gooTraps>0){
 			Goo goo=new Goo(this.position);
-			this.currentField.addTrap(goo);
-			this.gooTraps	=	this.gooTraps-1;
+			if(this.currentField.addTrap(goo))
+				this.gooTraps	=	this.gooTraps-1;
 		}
 	}
 	
@@ -196,7 +196,7 @@ public class Robot implements Landable, Jumping{
 	 */
 	public void onRobot(Robot r){
 		if(r.getSpeed()>this.getSpeed()){
-			this.destroy();		
+			this.destroy();
 			r.halveSpeed();
 		}
 		else{
@@ -212,8 +212,8 @@ public class Robot implements Landable, Jumping{
 	public void placeOil(){
 		if(this.gooTraps>0){
 			Oil oil=new Oil(this.position);
-			this.currentField.addTrap(oil);
-			this.oilTraps	=	this.oilTraps-1;
+			if(this.currentField.addTrap(oil))
+				this.oilTraps	=	this.oilTraps-1;
 		}
 	}
 	
@@ -227,10 +227,10 @@ public class Robot implements Landable, Jumping{
 	
 	/**
 	 * 
-	 * @param clr
+	 * @param c
 	 */
-	public void onCleaner(Cleaner clr){
-		//clr.destroy();
+	public void onCleaner(Cleaner c){
+		c.destroy();
 	}
 	
 	/**
@@ -245,6 +245,7 @@ public class Robot implements Landable, Jumping{
 	 */
 	public void destroy(){
 		this.state=RobotState.Eliminated;
+		this.currentField.left(this);
 	}
 	
 	/**
