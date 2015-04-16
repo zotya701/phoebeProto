@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -232,20 +233,46 @@ public class GameManager {
 	 */
 	public void step(){
 		
+		Cleaner[] cleanersArr=GameManager.cleaners.toArray(new Cleaner[GameManager.cleaners.size()]);
+		for(int j=0;j<cleanersArr.length;++j){
+			cleanersArr[j].move();
+		}
+		Oil[] oils=GameManager.oilList.toArray(new Oil[GameManager.oilList.size()]);
+		for(int j=0;j<oils.length;++j){
+			oils[j].roundElapsed();
+		}
+		int robotsAlive=0;
+		for(Robot r : this.robots){
+			if(r.isAlive()){
+				robotsAlive=robotsAlive+1;
+			}
+		}
+		round=round+1;
+		if(round>=20 || robotsAlive<=1){
+			this.end();
+		}
 	}
 
 	/**
 	 * 
 	 */
 	public void end(){
-		
+		this.showResults();
 	}
 
 	/**
 	 * 
 	 */
 	public void showResults(){
-		
+		float max=0;
+		int maxIndex=0;
+		for(int i=0;i<this.robots.size();++i){
+			if(this.robots.get(i).isAlive() && max<this.robots.get(i).getRouteTravelled()){
+				max=this.robots.get(i).getRouteTravelled();
+				maxIndex=i;
+			}
+		}
+		System.out.println("Robot id:"+maxIndex+" nyert!");
 	}
 	
 	public static void main(String[] args){
