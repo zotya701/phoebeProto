@@ -13,42 +13,45 @@ public class Robot implements Landable, Jumping{
 	
 //privát adattagok kezdete
 	/**
-	 * 
+	 * A robot állapota: Lehet Normal, Collided, Eliminated
 	 */
 	private RobotState state;
 	
 	/**
-	 * 
+	 * Referencia a pályára.
 	 */
 	private Map map;
 	
 	/**
-	 * 
+	 * A robot jelenlegi pozíciója.
 	 */
 	private Point position;
 	
 	/**
-	 * 
+	 * A robot sebességvektora.
 	 */
 	private Point velocity;
 	
 	/**
-	 * 
+	 *  A jelenlegi mezõ, amin épp van a robot.
+
 	 */
 	private NormalField currentField;
 	
 	/**
-	 * 
+	 * A robotnak a játék kezdete óta megtett távolsága.
 	 */
 	private  float routeTravelled;
 	
 	/**
-	 * 
+	 * A még felhasználható ragacskészlet, amit a robot ugráskor maga mögött hagyhat.
+
 	 */
 	private  int gooTraps;
 	
 	/**
-	 * 
+	 * A még felhasználható olajkészlet, amit a robot ugráskor maga mögött hagyhat.
+
 	 */
 	private  int oilTraps;
 	
@@ -67,17 +70,19 @@ public class Robot implements Landable, Jumping{
 	
 //statikus adattagok kezdete
 	/**
-	 * 
+	 * Legnagyobb ID-jû robot ID-je
 	 */
 	public static int statid=0;
 //statikus adattagok vége
 	
 //publikus metódusok kezdete
 	/**
-	 * 
-	 * @param map
-	 * @param pos
-	 * @param vel
+	 * Konstruktor. Beállítja a pályát, a kezdõ pozíciót, és a sebességvektort.
+	 *  Regisztrálja magát a pálya megfelelõ mezõjére.
+
+	 * @param map A pálya referenciája
+	 * @param pos Kezdõpozíció
+	 * @param vel Kezdõ sebességvektor
 	 */
 	public Robot(Map map, Point pos, Point vel){
 		this.state			=	RobotState.Normal;
@@ -94,16 +99,16 @@ public class Robot implements Landable, Jumping{
 	}
 	
 	/**
-	 * 
-	 * @param j
+	 * Meghívja a jumping onRobot() függvényét.
+	 * @param j A jumping objektum aki ráugrott a robotra.
 	 */
 	public void interact(Jumping j){
 		j.onRobot(this);
 	}
 	
 	/**
-	 * 
-	 * @param nf
+	 *  Beállítja a currentField attribútumot, meghívja a staying metódusát.
+	 * @param nf A NormalField amire érkezett a robot.
 	 */
 	public void normalField(NormalField nf){
 		this.currentField=nf;
@@ -111,7 +116,7 @@ public class Robot implements Landable, Jumping{
 	}
 	
 	/**
-	 * 
+	 * Az objektum attribútumainak kiíratása a teszteléshez
 	 */
 	public void Print(){
 		String state="ilyen nem lehetne";
