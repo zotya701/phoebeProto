@@ -144,7 +144,11 @@ public class GameManager {
 				}
 	//step
 				else if(command.contains("step")){
-					
+					Point p=new Point(4, 0);
+					for(int i=0;i<15;++i){
+						p=this.map.getRouteToTrap(p);
+						System.out.println(p);
+					}
 				}
 	//jump
 				else if(command.contains("jump")){
