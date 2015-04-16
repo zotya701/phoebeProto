@@ -53,15 +53,19 @@ public class NormalField implements Field{
 	 * @param trap
 	 */
 	public void addTrap(Trap trap){
+		boolean alreadyHaveTrap=false;
 		for(int i=0;i<this.elements.size();++i){
 			if(this.elements.get(i).gooType() || this.elements.get(i).oilType()){
+				alreadyHaveTrap=true;
 				if(((Trap)(this.elements.get(i))).compareType(trap)){
 					((Trap)(this.elements.get(i))).cleanup();
 				}
 			}
 		}
-		this.elements.add(trap);
-		trap.setNormalField(this);
+		if(alreadyHaveTrap==false){
+			this.elements.add(trap);
+			trap.setNormalField(this);
+		}
 	}
 	
 	/**

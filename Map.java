@@ -30,11 +30,6 @@ public class Map implements Printable{
 	 * 
 	 */
 	private Point size;
-
-	/**
-	 * 
-	 */
-	private List<Trap> trapList;
 	
 	/**
 	 * 
@@ -48,13 +43,12 @@ public class Map implements Printable{
 	 * @param filename
 	 * @param trapList
 	 */
-	public Map(String filename, List<Trap> trapList){
-		this.trapList	=	trapList;
+	public Map(String filename){
 		this.outside	=	new OutsideField();
 		this.fields		=	new ArrayList<List<Field>>();
 		this.nodes		=	new ArrayList<List<Node>>();
-		Oil.trapList.clear();
-		Oil.oilList.clear();
+		GameManager.trapList.clear();
+		GameManager.oilList.clear();
 		
 		try {
 			File map=new File(filename);
@@ -151,14 +145,15 @@ public class Map implements Printable{
 	 * @param source
 	 * @return
 	 */
-	public Point getRouteToTrap(Point source){
+	public Point getRouteToTrap(Point source, Cleaner c){
 		this.computePaths(this.nodes.get(source.y).get(source.x));
 		int min			=	Integer.MAX_VALUE;
 		Point minPoint	=	new Point(source);
-		for(Trap trap : this.trapList){//megkeressük melyik csapdához lehet a legrövidebb úton elmenni
+		for(Trap trap : GameManager.trapList){//megkeressük melyik csapdához lehet a legrövidebb úton elmenni
 			if(min>this.nodes.get(trap.getPosition().y).get(trap.getPosition().x).getMinDistance()){
 				min=this.nodes.get(trap.getPosition().y).get(trap.getPosition().x).getMinDistance();
 				minPoint=trap.getPosition();
+				c.setTarget(trap);
 			}
 		}
 		List<Node> shortestPath	=	this.getShortestPathTo(this.nodes.get(minPoint.y).get(minPoint.x));
