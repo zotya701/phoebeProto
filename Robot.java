@@ -225,6 +225,10 @@ public class Robot implements Landable, Jumping{
 		return (float)(Math.pow(this.velocity.x*this.velocity.x+this.velocity.y*this.velocity.y, 0.5));
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public boolean isAlive(){
 		if(this.state!=RobotState.Eliminated)
 			return true;
@@ -233,10 +237,19 @@ public class Robot implements Landable, Jumping{
 	
 	/**
 	 * 
+	 * @return
+	 */
+	public float getRouteTravelled(){
+		return this.routeTravelled;
+	}
+	
+	/**
+	 * 
 	 * @param c
 	 */
 	public void onCleaner(Cleaner c){
 		c.destroy();
+		this.state=RobotState.Unturnable;
 	}
 	
 	/**
