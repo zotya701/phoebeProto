@@ -15,7 +15,7 @@ import java.util.PriorityQueue;
  */
 public class Map implements Printable{
 	
-//Privát adattagok kezdete
+//privát adattagok kezdete
 	/**
 	 * 
 	 */
@@ -40,7 +40,7 @@ public class Map implements Printable{
 	 * 
 	 */
 	private OutsideField outside;
-//Privát adattagok vége
+//privát adattagok vége
 
 //publikus metódusok kezdete
 	/**
@@ -124,7 +124,12 @@ public class Map implements Printable{
 		return fields.get(coord.y).get(coord.x);
 	}
 	
-	
+	/**
+	 * 
+	 * @param currentPos
+	 * @param vel
+	 * @return
+	 */
 	public Point getNewPos(Point currentPos, Point vel){
 		currentPos.translate(vel.x, vel.y);
 		return currentPos;
@@ -187,6 +192,10 @@ public class Map implements Printable{
 		}
 	}
 	
+	/**
+	 * 
+	 * @param source
+	 */
 	public void computePaths(Node source){
 		for(int y=0;y<this.size.y;++y){
 			for(int x=0;x<this.size.x;++x){
@@ -214,7 +223,12 @@ public class Map implements Printable{
             }
 		}
     }
-
+	
+	/**
+	 * 
+	 * @param target
+	 * @return
+	 */
     public List<Node> getShortestPathTo(Node target){
         List<Node> path = new ArrayList<Node>();
         for (Node node = target; node != null; node = node.getPrevious())

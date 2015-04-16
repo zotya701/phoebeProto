@@ -26,10 +26,12 @@ public class Goo implements Trap{
 	private int health;
 //privát adattagok vége
 	
+//statikus adattagok kezdete
 	/**
 	 * 
 	 */
 	static public List<Trap> trapList=new ArrayList<Trap>();
+//statikus adattagok vége
 	
 //publikus metódusok kezdete
 	/**

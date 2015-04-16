@@ -3,9 +3,15 @@ package phoebeProto;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 
+ */
 public class NormalField implements Field{
 	
 //privát adattagok kezdete
+	/**
+	 * 
+	 */
 	private List<Landable> elements;
 //privát adattagok vége
 	
