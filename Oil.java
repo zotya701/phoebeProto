@@ -45,10 +45,11 @@ public class Oil implements Trap{
 	/**
 	 * 
 	 */
-	public void roundElapse(){
+	public void roundElapsed(){
 		this.health=this.health-1;
-		if(this.health==0)
+		if(this.health==0){
 			this.cleanup();
+		}
 	}
 
 	/**

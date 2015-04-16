@@ -35,8 +35,9 @@ public class NormalField implements Field{
 	 * @param j
 	 */
 	public void arrived(Jumping j) {
-		for(int i=0;i<this.elements.size();++i)
-			this.elements.get(i).interact(j);
+		Landable[] elements=this.elements.toArray(new Landable[this.elements.size()]);
+		for(int i=0;i<elements.length;++i)
+			elements[i].interact(j);
 		j.normalField(this);
 	}
 	
@@ -54,19 +55,20 @@ public class NormalField implements Field{
 	 */
 	public boolean addTrap(Trap trap){
 		boolean alreadyHaveTrap=false;
-		for(int i=0;i<this.elements.size();++i){
-			if(this.elements.get(i).gooType() || this.elements.get(i).oilType()){
+		Landable[] elements=this.elements.toArray(new Landable[this.elements.size()]);
+		for(int i=0;i<elements.length;++i){
+			if(elements[i].gooType() || elements[i].oilType()){
 				alreadyHaveTrap=true;
-				if(((Trap)(this.elements.get(i))).compareType(trap)){//ha ugyanolyan csapda már van a mezõn, akkor azt leszedi, és rárakja az újat (frissíti)
-					((Trap)(this.elements.get(i))).cleanup();
-					this.elements.add(0, trap);
+				if(((Trap)(elements[i])).compareType(trap)){
+					((Trap)elements[i]).cleanup();
+					this.elements.add(trap);
 					trap.setNormalField(this);
 					return true;
 				}
 			}
 		}
 		if(alreadyHaveTrap==false){//ha még semmilyen csapda nincs a mezõn, lerakja rá azt
-			this.elements.add(0, trap);
+			this.elements.add(trap);
 			trap.setNormalField(this);
 			return true;
 		}
@@ -81,7 +83,7 @@ public class NormalField implements Field{
 	 * @param l
 	 */
 	public void staying(Landable l){
-		this.elements.add(l);
+		this.elements.add(0, l);
 	}
 //publikus metódusok vége
 }

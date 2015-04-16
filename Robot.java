@@ -50,10 +50,12 @@ public class Robot implements Landable, Jumping{
 	 */
 	private  int oilTraps;
 	
+	
 	/**
 	 * 
 	 */
-	private boolean onOil;
+	//private boolean onOil;
+	
 	
 	/**
 	 * 
@@ -83,7 +85,7 @@ public class Robot implements Landable, Jumping{
 		this.routeTravelled	=	0;
 		this.gooTraps		=	3;
 		this.oilTraps		=	3;
-		this.onOil			=	false;
+		//this.onOil			=	false;
 		this.id				=	Robot.statid;
 		Robot.statid		=	Robot.statid+1;
 		this.map.getField(this.position).arrived(this);
@@ -136,24 +138,22 @@ public class Robot implements Landable, Jumping{
 	/**
 	 * 
 	 * @param modifierVelocity
-	 * @return
 	 */
-	public RobotState jump(Point modifierVelocity){
+	public void jump(Point modifierVelocity){
 		if(this.state!=RobotState.Eliminated){
 			Point old=new Point(this.position);
 			this.currentField.left(this);
 			if(this.state!=RobotState.Unturnable){
 				this.velocity.translate(modifierVelocity.x, modifierVelocity.y);
 			}
+			else {
+				this.state=RobotState.Normal;
+				//this.onOil=false;
+			}
 			this.position=this.map.getNewPos(this.position, this.velocity);
 			this.map.getField(this.position).arrived(this);
 			this.routeTravelled=this.map.calculateDistance(old, this.position);
 		}
-		if(this.state!=RobotState.Eliminated){
-			this.state=RobotState.Normal;
-			this.onOil=false;
-		}
-		return this.state;
 	}
 	
 	/**
@@ -174,7 +174,7 @@ public class Robot implements Landable, Jumping{
 	 * 
 	 */
 	public void onOil(){
-		this.onOil=true;
+		//this.onOil=true;
 		this.state=RobotState.Unturnable;
 	}
 	
@@ -223,6 +223,12 @@ public class Robot implements Landable, Jumping{
 	 */
 	public float getSpeed(){
 		return (float)(Math.pow(this.velocity.x*this.velocity.x+this.velocity.y*this.velocity.y, 0.5));
+	}
+	
+	public boolean isAlive(){
+		if(this.state!=RobotState.Eliminated)
+			return true;
+		else return false;
 	}
 	
 	/**
