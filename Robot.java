@@ -5,7 +5,9 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 
 /**
- * 
+ * A robotot megvalósító osztály. 
+ * Megvalósítja a Jumping és Landable interfészt, 
+ * így ugrani is képes, és rá is tudnak ugrani
  */
 public class Robot implements Landable, Jumping{
 	
