@@ -5,7 +5,9 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 
 /**
- * 
+ * A robotot megvalósító osztály. 
+ * Megvalósítja a Jumping és Landable interfészt, 
+ * így ugrani is képes, és rá is tudnak ugrani
  */
 public class Robot implements Landable, Jumping{
 	
@@ -50,10 +52,12 @@ public class Robot implements Landable, Jumping{
 	 */
 	private  int oilTraps;
 	
+	
 	/**
 	 * 
 	 */
-	private boolean onOil;
+	//private boolean onOil;
+	
 	
 	/**
 	 * 
@@ -61,10 +65,12 @@ public class Robot implements Landable, Jumping{
 	private int id;
 //privát adattagok vége
 	
+//statikus adattagok kezdete
 	/**
 	 * 
 	 */
 	public static int statid=0;
+//statikus adattagok vége
 	
 //publikus metódusok kezdete
 	/**
@@ -81,7 +87,7 @@ public class Robot implements Landable, Jumping{
 		this.routeTravelled	=	0;
 		this.gooTraps		=	3;
 		this.oilTraps		=	3;
-		this.onOil			=	false;
+		//this.onOil			=	false;
 		this.id				=	Robot.statid;
 		Robot.statid		=	Robot.statid+1;
 		this.map.getField(this.position).arrived(this);
@@ -134,24 +140,22 @@ public class Robot implements Landable, Jumping{
 	/**
 	 * 
 	 * @param modifierVelocity
-	 * @return
 	 */
-	public RobotState jump(Point modifierVelocity){
+	public void jump(Point modifierVelocity){
 		if(this.state!=RobotState.Eliminated){
 			Point old=new Point(this.position);
 			this.currentField.left(this);
 			if(this.state!=RobotState.Unturnable){
 				this.velocity.translate(modifierVelocity.x, modifierVelocity.y);
 			}
+			else {
+				this.state=RobotState.Normal;
+				//this.onOil=false;
+			}
 			this.position=this.map.getNewPos(this.position, this.velocity);
 			this.map.getField(this.position).arrived(this);
 			this.routeTravelled=this.map.calculateDistance(old, this.position);
 		}
-		if(this.state!=RobotState.Eliminated){
-			this.state=RobotState.Normal;
-			this.onOil=false;
-		}
-		return this.state;
 	}
 	
 	/**
@@ -172,7 +176,7 @@ public class Robot implements Landable, Jumping{
 	 * 
 	 */
 	public void onOil(){
-		this.onOil=true;
+		//this.onOil=true;
 		this.state=RobotState.Unturnable;
 	}
 	
@@ -183,8 +187,8 @@ public class Robot implements Landable, Jumping{
 	public void placeGoo(){
 		if(this.gooTraps>0){
 			Goo goo=new Goo(this.position);
-			this.currentField.addTrap(goo);
-			this.gooTraps	=	this.gooTraps-1;
+			if(this.currentField.addTrap(goo))
+				this.gooTraps	=	this.gooTraps-1;
 		}
 	}
 	
@@ -194,7 +198,7 @@ public class Robot implements Landable, Jumping{
 	 */
 	public void onRobot(Robot r){
 		if(r.getSpeed()>this.getSpeed()){
-			this.destroy();		
+			this.destroy();
 			r.halveSpeed();
 		}
 		else{
@@ -210,8 +214,8 @@ public class Robot implements Landable, Jumping{
 	public void placeOil(){
 		if(this.gooTraps>0){
 			Oil oil=new Oil(this.position);
-			this.currentField.addTrap(oil);
-			this.oilTraps	=	this.oilTraps-1;
+			if(this.currentField.addTrap(oil))
+				this.oilTraps	=	this.oilTraps-1;
 		}
 	}
 	
@@ -225,10 +229,29 @@ public class Robot implements Landable, Jumping{
 	
 	/**
 	 * 
-	 * @param clr
+	 * @return
 	 */
-	public void onCleaner(Cleaner clr){
-		//clr.destroy();
+	public boolean isAlive(){
+		if(this.state!=RobotState.Eliminated)
+			return true;
+		else return false;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public float getRouteTravelled(){
+		return this.routeTravelled;
+	}
+	
+	/**
+	 * 
+	 * @param c
+	 */
+	public void onCleaner(Cleaner c){
+		c.destroy();
+		this.state=RobotState.Unturnable;
 	}
 	
 	/**
@@ -243,6 +266,7 @@ public class Robot implements Landable, Jumping{
 	 */
 	public void destroy(){
 		this.state=RobotState.Eliminated;
+		this.currentField.left(this);
 	}
 	
 	/**
