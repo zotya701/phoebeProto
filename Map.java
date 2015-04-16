@@ -187,7 +187,7 @@ public class Map implements Printable{
 		}
 	}
 	
-	public static void computePaths(Node source){
+	public void computePaths(Node source){
         source.setMinDistance(0);
         PriorityQueue<Node> NodeQueue = new PriorityQueue<Node>();
       	NodeQueue.add(source);
@@ -208,7 +208,7 @@ public class Map implements Printable{
 		}
     }
 
-    public static List<Node> getShortestPathTo(Node target){
+    public List<Node> getShortestPathTo(Node target){
         List<Node> path = new ArrayList<Node>();
         for (Node node = target; node != null; node = node.getPrevious())
             path.add(node);
