@@ -107,20 +107,22 @@ public class GameManager {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		while(true){
 			String command="";
+			String[] splittedCommand;
 			try {
 				command=br.readLine();
 	//loadMap
 				if(command.contains("loadMap")){													//ha tartalmazza a parancs a loadMap stringet
-					String[] splittedCommand=command.split("\\s+");									//feldarabolja a stringet space-enként
+					splittedCommand=command.split("\\s+");									//feldarabolja a stringet space-enként
 					if(splittedCommand.length>=2){													//ha legaláb 2 rész string maradt
-						if(new File(splittedCommand[1]).exists()){									//akkor töltse be az adatokat ha van honnan
-							this.map	=	new Map(splittedCommand[1], trapList);					//létrehoz egy pályát a loadMap után beírt fájlból
+						String filename	=	splittedCommand[1];
+						if(new File(filename).exists()){									//akkor töltse be az adatokat ha van honnan
+							this.map	=	new Map(filename, trapList);					//létrehoz egy pályát a loadMap után beírt fájlból
 						}
 					}
 				}
 	//loadRobots
 				else if(command.contains("loadRobots")){
-					String[] splittedCommand=command.split("\\s+");									//feldarabolja a stringet space-enként
+					splittedCommand=command.split("\\s+");									//feldarabolja a stringet space-enként
 					if(splittedCommand.length>=2){													//ha legaláb 2 rész string maradt
 						File robotsFile=new File(splittedCommand[1]);
 						if(robotsFile.exists()){													//ha létezik a robotok adatait tartalmazó fájl
@@ -129,7 +131,11 @@ public class GameManager {
 						    while(BR.ready()){														//amíg van adat a robotok adatait tartalmazó fájlban
 						    	String[] p=BR.readLine().split("\\s+");								//feldarabolja a beolvasott stringet space-enként
 						    	if(p.length>=4){													//legalább 4 kell
-						    		this.robots.add(new Robot(this.map, new Point(Integer.parseInt(p[0]), Integer.parseInt(p[1])), new Point(Integer.parseInt(p[2]), Integer.parseInt(p[3]))));
+						    		int x1	=	Integer.parseInt(p[0]);
+						    		int y1	=	Integer.parseInt(p[1]);
+						    		int x2	=	Integer.parseInt(p[2]);
+						    		int y2	=	Integer.parseInt(p[3]);
+						    		this.robots.add(new Robot(this.map, new Point(x1, y1), new Point(x2, y2)));
 						    	}
 						    }
 						    BR.close();
@@ -142,11 +148,18 @@ public class GameManager {
 				}
 	//jump
 				else if(command.contains("jump")){
-					
+					splittedCommand=command.split("\\s+");
+					if(splittedCommand.length>=4){
+						int id		=	Integer.parseInt(splittedCommand[1]);
+						int x		=	Integer.parseInt(splittedCommand[2]);
+						int y		=	Integer.parseInt(splittedCommand[3]);
+						if(id>=0 && id<this.robots.size())
+							this.robots.get(id).jump(new Point(x,y));
+					}
 				}
 	//placeTrap
 				else if(command.contains("placeTrap")){
-					String[] splittedCommand=command.split("\\s+");
+					splittedCommand=command.split("\\s+");
 					if(splittedCommand.length>=3){
 						int id		=	Integer.parseInt(splittedCommand[1]);
 						int type	=	Integer.parseInt(splittedCommand[2]);

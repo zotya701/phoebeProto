@@ -54,6 +54,9 @@ public class Goo implements Trap{
 	 */
 	public void interact(Jumping j){
 		j.onGoo();
+		this.health	=	this.health-1;
+		if(this.health==0)
+			this.cleanup();
 	}
 
 	/**
