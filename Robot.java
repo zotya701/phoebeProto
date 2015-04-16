@@ -61,10 +61,12 @@ public class Robot implements Landable, Jumping{
 	private int id;
 //privát adattagok vége
 	
+//statikus adattagok kezdete
 	/**
 	 * 
 	 */
 	public static int statid=0;
+//statikus adattagok vége
 	
 //publikus metódusok kezdete
 	/**

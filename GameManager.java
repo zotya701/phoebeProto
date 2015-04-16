@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class GameManager {
 	
-//Privát adattagok kezdete
+//privát adattagok kezdete
 	/**
 	 * 
 	 */
@@ -54,7 +54,7 @@ public class GameManager {
 	 * 
 	 */
 	private List<Trap> trapList;
-//Privát adattagok vége
+//privát adattagok vége
 
 //publikus metódusok kezdete
 	/**
