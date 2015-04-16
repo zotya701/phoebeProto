@@ -1,7 +1,6 @@
 package phoebeProto;
 
 import java.awt.Point;
-import java.util.List;
 
 /**
  *
@@ -37,11 +36,5 @@ public interface Trap extends Landable{
 	 * @return
 	 */
 	public Point getPosition();
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public List<Trap> trapList();
 	
 }
