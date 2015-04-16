@@ -50,9 +50,9 @@ public class Cleaner implements Landable, Jumping{
 		this.state			=	RobotState.Normal;
 		this.map			=	map;
 		this.position		=	pos;
-		this.currentField	=	null;
 		this.cleaningStage	=	0;
 		this.target			=	null;
+		this.map.getField(this.position).arrived(this);
 	}
 	
 	/**
@@ -69,6 +69,7 @@ public class Cleaner implements Landable, Jumping{
 	 */
 	public void normalField(NormalField nf){
 		this.currentField=nf;
+		this.currentField.staying(this);
 	}
 
 	/**

@@ -71,7 +71,8 @@ public class Goo implements Trap{
 	 * 
 	 */
 	public void cleanup(){
-		this.currentField.left(this);
+		if(this.currentField!=null)
+			this.currentField.left(this);
 		GameManager.trapList.remove(this);
 	}
 
