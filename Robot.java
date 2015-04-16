@@ -1,8 +1,6 @@
 package phoebeProto;
 
 import java.awt.Point;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 
 /**
  * 
@@ -119,13 +117,7 @@ public class Robot implements Landable, Jumping{
 			state="normal";
 		else if(this.state==RobotState.Unturnable)
 			state="unturnable";
-		DecimalFormat format		=	new DecimalFormat("0.######");
-		DecimalFormatSymbols dfs	=	format.getDecimalFormatSymbols();
-	    dfs.setDecimalSeparator('.');
-		if(this.routeTravelled==0)
-			format	=	new DecimalFormat("0.#");
-		format.setDecimalFormatSymbols(dfs);
-		System.out.println("Robot id:"+this.id+" pos:("+this.position.x+","+this.position.y+") vel:("+this.velocity.x+","+this.velocity.y+") route: "+format.format(this.routeTravelled)+" goo:"+this.gooTraps+" oil:"+this.oilTraps+" state:"+state);					
+		System.out.println("Robot id:"+this.id+" pos:("+this.position.x+","+this.position.y+") vel:("+this.velocity.x+","+this.velocity.y+") route: "+this.routeTravelled+" goo:"+this.gooTraps+" oil:"+this.oilTraps+" state:"+state);					
 	}
 	
 	/**
