@@ -151,7 +151,7 @@ public class Map implements Printable{
 		int min			=	Integer.MAX_VALUE;
 		Point minPoint	=	new Point(source);
 		for(Trap trap : this.trapList){//megkeressük melyik csapdához lehet a legrövidebb úton elmenni
-			if(min<this.nodes.get(trap.getPosition().y).get(trap.getPosition().x).getMinDistance()){
+			if(min>this.nodes.get(trap.getPosition().y).get(trap.getPosition().x).getMinDistance()){
 				min=this.nodes.get(trap.getPosition().y).get(trap.getPosition().x).getMinDistance();
 				minPoint=trap.getPosition();
 			}
@@ -188,6 +188,13 @@ public class Map implements Printable{
 	}
 	
 	public void computePaths(Node source){
+		for(int y=0;y<this.size.y;++y){
+			for(int x=0;x<this.size.x;++x){
+				this.nodes.get(y).get(x).setPrevious(null);
+				this.nodes.get(y).get(x).setMinDistance(Integer.MAX_VALUE);
+			}
+		}
+		
         source.setMinDistance(0);
         PriorityQueue<Node> NodeQueue = new PriorityQueue<Node>();
       	NodeQueue.add(source);

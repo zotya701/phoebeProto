@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * 
  */
-public class Node {
+public class Node implements Comparable<Node>{
 
 //privát adattagok kezdete
 	/**
