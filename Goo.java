@@ -24,12 +24,12 @@ public class Goo implements Trap{
 	 * 
 	 */
 	private int health;
-
+//privát adattagok vége
+	
 	/**
 	 * 
 	 */
-	static private List<Trap> trapList=new ArrayList<Trap>();
-//privát adattagok vége
+	static public List<Trap> trapList=new ArrayList<Trap>();
 	
 //publikus metódusok kezdete
 	/**
@@ -45,7 +45,7 @@ public class Goo implements Trap{
 	 * 
 	 */
 	public void Print(){
-		System.out.println("Trap Goo ("+this.position.x+","+this.position.y+") health: "+this.health);
+		System.out.println("Trap goo ("+this.position.x+","+this.position.y+") health: "+this.health);
 	}
 
 	/**
@@ -54,6 +54,9 @@ public class Goo implements Trap{
 	 */
 	public void interact(Jumping j){
 		j.onGoo();
+		this.health	=	this.health-1;
+		if(this.health==0)
+			this.cleanup();
 	}
 
 	/**

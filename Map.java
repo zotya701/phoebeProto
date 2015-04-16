@@ -51,6 +51,8 @@ public class Map implements Printable{
 		this.outside	=	new OutsideField();
 		this.fields		=	new ArrayList<List<Field>>();
 		this.nodes		=	new ArrayList<List<Node>>();
+		Oil.trapList.clear();
+		Oil.oilList.clear();
 		
 		try {
 			File map=new File(filename);
@@ -129,7 +131,8 @@ public class Map implements Printable{
 	 * @return
 	 */
 	public float calculateDistance(Point s, Point d){
-		return (float)(Math.pow((d.x-s.x)*(d.x-s.x)+(d.y-s.y)*(d.y-s.y), 0.5));
+		float dist=(float)(Math.pow((d.x-s.x)*(d.x-s.x)+(d.y-s.y)*(d.y-s.y), 0.5));
+		return dist;
 	}
 	
 	/**

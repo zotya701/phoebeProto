@@ -24,17 +24,17 @@ public class Oil implements Trap{
 	 * 
 	 */
 	private int health;
-
-	/**
-	 * 
-	 */
-	static private List<Oil> oilList=new ArrayList<Oil>();
+//privát adattagok vége
 	
 	/**
 	 * 
 	 */
-	static private List<Trap> trapList=new ArrayList<Trap>();
-//privát adattagok vége
+	static public List<Oil> oilList=new ArrayList<Oil>();
+	
+	/**
+	 * 
+	 */
+	static public List<Trap> trapList=new ArrayList<Trap>();
 	
 //publikus metódusok kezdete
 	/**
@@ -51,7 +51,16 @@ public class Oil implements Trap{
 	 * 
 	 */
 	public void Print(){
-		System.out.println("Trap Oil ("+this.position.x+","+this.position.y+") health: "+this.health);
+		System.out.println("Trap oil ("+this.position.x+","+this.position.y+") health: "+this.health);
+	}
+	
+	/**
+	 * 
+	 */
+	public void roundElapse(){
+		this.health=this.health-1;
+		if(this.health==0)
+			this.cleanup();
 	}
 
 	/**
