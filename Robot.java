@@ -13,7 +13,7 @@ public class Robot implements Landable, Jumping{
 	
 //privát adattagok kezdete
 	/**
-	 * A robot állapota: Lehet Normal, Collided, Eliminated
+	 * A robot állapota: Lehet Normal, Unturnable, Eliminated
 	 */
 	private RobotState state;
 	
@@ -136,15 +136,15 @@ public class Robot implements Landable, Jumping{
 	}
 	
 	/**
-	 * 
+	 * Segédmetódus, hamis értéket ad vissza.
 	 */
 	public boolean gooType(){
 		return false;
 	}
 	
 	/**
-	 * 
-	 * @param modifierVelocity
+	 * Ugratja a robotot a pozíciója és sebességvektora alapján, majd visszatér az állapotával.
+	 * @param modifierVelocity A sebességvektor változása
 	 */
 	public void jump(Point modifierVelocity){
 		if(this.state!=RobotState.Eliminated){
@@ -164,21 +164,23 @@ public class Robot implements Landable, Jumping{
 	}
 	
 	/**
-	 * 
+	 * Felezi a robot sebességét. Ha páratlan, lefelé kerekít.
 	 */
 	public void onGoo(){
 		this.halveSpeed();
 	}
 	
 	/**
-	 * 
+	 * Segédmetódus, hamis értéket ad vissza.
 	 */
 	public boolean oilType(){
 		return false;
 	}
 	
 	/**
-	 * 
+	 * Az onOil attribútumot igazzá teszi, 
+	 * és a robot állapotát Unturnable-be állítja,
+	 * így a következõ körben nem módosítható a sebességvektor.
 	 */
 	public void onOil(){
 		//this.onOil=true;
@@ -186,8 +188,7 @@ public class Robot implements Landable, Jumping{
 	}
 	
 	/**
-	 * 
-	 * @param goo
+	 * Lerak egy ragacsot a mezõre amin áll.
 	 */
 	public void placeGoo(){
 		if(this.gooTraps>0){
@@ -198,8 +199,11 @@ public class Robot implements Landable, Jumping{
 	}
 	
 	/**
-	 * 
-	 * @param r
+	 * Összehasonlítja a két egymással ütközött robot sebességét,
+	 *  majd a kisebb sebességût kiejti a játékból,
+	 *  a nagyobb sebessége pedig kettejük átlagsebessége lesz.
+
+	 * @param r A másik robot, evvel ütközik
 	 */
 	public void onRobot(Robot r){
 		if(r.getSpeed()>this.getSpeed()){
@@ -213,8 +217,7 @@ public class Robot implements Landable, Jumping{
 	}
 	
 	/**
-	 * 
-	 * @param oil
+	 * Lerak egy olajat a mezõre amin áll.
 	 */
 	public void placeOil(){
 		if(this.gooTraps>0){
@@ -225,16 +228,16 @@ public class Robot implements Landable, Jumping{
 	}
 	
 	/**
-	 * 
-	 * @return
+	 *  Visszaadja a robot aktuális sebességét.
+	 * @return A robot sebessége
 	 */
 	public float getSpeed(){
 		return (float)(Math.pow(this.velocity.x*this.velocity.x+this.velocity.y*this.velocity.y, 0.5));
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * Lekérdezi, hogy él-e még a robot
+	 * @return igaz ha él még a robot(Normal, vagy Unturnable), hamis ha Eliminated
 	 */
 	public boolean isAlive(){
 		if(this.state!=RobotState.Eliminated)
@@ -243,16 +246,16 @@ public class Robot implements Landable, Jumping{
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * A robot eddig megtett távolságának lekérdezése
+	 * @return A távolság
 	 */
 	public float getRouteTravelled(){
 		return this.routeTravelled;
 	}
 	
 	/**
-	 * 
-	 * @param c
+	 * A robot kisrobotra ugrása, amit elpusztít
+	 * @param c A Cleaner amire ráugrott
 	 */
 	public void onCleaner(Cleaner c){
 		c.destroy();
@@ -260,14 +263,15 @@ public class Robot implements Landable, Jumping{
 	}
 	
 	/**
-	 * 
+	 * A robot állapotát Eliminated állapotba állítja. Árokba ugrás esetén
 	 */
 	public void outside(){
 		this.state=RobotState.Eliminated;
 	}
 	
 	/**
-	 * 
+	 * A robot állapotát Eliminated állapotba állítja, és eltávolítja az eddigi mezõjérõl.
+	 * Akkor hívódik meg amikor egy gyorsabb robottal ütközik.
 	 */
 	public void destroy(){
 		this.state=RobotState.Eliminated;
@@ -275,7 +279,7 @@ public class Robot implements Landable, Jumping{
 	}
 	
 	/**
-	 * 
+	 * Sebességvektor felezése
 	 */
 	public void halveSpeed(){
 		this.velocity.x=this.velocity.x/2;
