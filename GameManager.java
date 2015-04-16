@@ -15,10 +15,6 @@ import java.util.List;
 public class GameManager {
 	
 //privát adattagok kezdete
-	/**
-	 * 
-	 */
-	private List<Cleaner> cleaners;
 
 	/**
 	 * 
@@ -44,18 +40,25 @@ public class GameManager {
 	 * 
 	 */
 	private boolean[] robotsEliminated;
-
-	/**
-	 * 
-	 */
-	private List<Oil> oilList;
-
-	/**
-	 * 
-	 */
-	private List<Trap> trapList;
 //privát adattagok vége
 
+//statikus adattagok kezdete
+	/**
+	 * 
+	 */
+	public static List<Oil> oilList			=	new ArrayList<Oil>();
+
+	/**
+	 * 
+	 */
+	public static List<Trap> trapList		=	new ArrayList<Trap>();
+	
+	/**
+	 * 
+	 */
+	public static List<Cleaner> cleaners	=	new ArrayList<Cleaner>();
+//statikus adattagok vége
+	
 //publikus metódusok kezdete
 	/**
 	 * 
@@ -64,14 +67,8 @@ public class GameManager {
 		this.currentPlayer		=	0;
 		this.round				=	0;
 		this.robotsEliminated	=	new boolean[4];
-		this.oilList			=	new ArrayList<Oil>();
-		this.trapList			=	new ArrayList<Trap>();
-		this.cleaners			=	new ArrayList<Cleaner>();
 		this.robots				=	new ArrayList<Robot>(4);
-		Goo.trapList			=	this.trapList;
-		Oil.trapList			=	this.trapList;
-		Oil.oilList				=	this.oilList;
-		this.map				=	new Map("test.map", this.trapList);
+		this.map				=	new Map("test.map");
 	}
 
 	/**
@@ -81,7 +78,7 @@ public class GameManager {
 	public void LoadMap(String filename){
 		try {
 			if(new File(filename+".map").exists()){											//akkor töltse be az adatokat ha van honnan
-				this.map	=	new Map(filename+".map", trapList);							//létrehoz egy pályát a filename fájlból
+				this.map	=	new Map(filename+".map");							//létrehoz egy pályát a filename fájlból
 				File robotsFile=new File(filename+".robots");
 				if(robotsFile.exists()){													//ha létezik a robotok adatait tartalmazó fájl
 					Robot.statid=0;															//új betöltésnél megint nulláról induljon
@@ -116,7 +113,7 @@ public class GameManager {
 					if(splittedCommand.length>=2){													//ha legaláb 2 rész string maradt
 						String filename	=	splittedCommand[1];
 						if(new File(filename).exists()){									//akkor töltse be az adatokat ha van honnan
-							this.map	=	new Map(filename, trapList);					//létrehoz egy pályát a loadMap után beírt fájlból
+							this.map	=	new Map(filename);					//létrehoz egy pályát a loadMap után beírt fájlból
 						}
 					}
 				}
@@ -144,11 +141,7 @@ public class GameManager {
 				}
 	//step
 				else if(command.contains("step")){
-					Point p=new Point(4, 0);
-					for(int i=0;i<15;++i){
-						p=this.map.getRouteToTrap(p);
-						System.out.println(p);
-					}
+					
 				}
 	//jump
 				else if(command.contains("jump")){
@@ -192,7 +185,7 @@ public class GameManager {
 				}
 	//listTraps
 				else if(command.equals("listTraps")){
-					for(Trap trap : this.trapList)
+					for(Trap trap : GameManager.trapList)
 						trap.Print();
 				}
 	//listRobots
@@ -202,8 +195,8 @@ public class GameManager {
 				}
 	//listCleaners
 				else if(command.equals("listCleaners")){
-					//for(Cleaner cleaner : cleaners)
-						//cleaner.Print();
+					for(Cleaner cleaner : cleaners)
+						cleaner.Print();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
