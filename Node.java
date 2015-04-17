@@ -5,36 +5,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
+ * A pálya járható elemeit összekötõ gráf csomópontjait megvalósító osztály.
  */
 public class Node implements Comparable<Node>{
 
 //privát adattagok kezdete
 	/**
-	 * 
+	 * A csomópont koordinátája.
 	 */
 	private Point coord;
 	
 	/**
-	 * 
+	 * Az elõzõ csomópont, egy úton belül.
 	 */
 	private Node previous;
 	
 	/**
-	 * 
+	 *  A dijkstra algoritmushoz szükséges érték.
 	 */
 	private int minDistance;
 	
 	/**
-	 * 
+	 * A szomszédos csúcsokba vezetõ élek.
 	 */
 	private List<Edge> adjacencies;
 //privát adattagok vége
 	
 //publikus metódusok kezdete
 	/**
-	 * 
-	 * @param p
+	 * Konstruktor, létrehoz egy p koordinátájú Node-t
+	 * @param p A Node koordinátája
 	 */
 	public Node(Point p){
     	this.coord			=	p;
@@ -43,16 +43,17 @@ public class Node implements Comparable<Node>{
     }
 	
 	/**
-	 * 
-	 * @param e
+	 *  Új szomszédos él felvétele
+	 * @param e Az él amit felveszünk.
 	 */
 	public void addEdge(Edge e){
 		this.adjacencies.add(e);
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * A Node koordinátájának lekérdezése.
+	 * @return A Node koordinátájával tér vissza.
+
 	 */
 	public Point getCoord(){
 		return this.coord;
@@ -67,41 +68,41 @@ public class Node implements Comparable<Node>{
 	}
 	
 	/**
-	 * 
-	 * @return
+	 *  Az útvonal elõzõ csomópontjának lekérdezése
+	 * @return  Az útvonal elõzõ csomópontjával tér vissza.
+
 	 */
 	public List<Edge> getAdjacencies(){
 		return this.adjacencies;
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * @return minDistance visszaadása
 	 */
 	public int getMinDistance(){
 		return this.minDistance;
 	}
 	
 	/**
-	 * 
-	 * @param md
+	 * minDistance beállítása
+	 * @param md A beállítandó érték
 	 */
 	public void setMinDistance(int md){
 		this.minDistance	=	md;
 	}
 	
 	/**
-	 * 
-	 * @param prev
+	 * Az útvonal elõzõ csomópontjának beállítása
+	 * @param prev A beállítandó csomópont
 	 */
 	public void setPrevious(Node prev){
 		this.previous		=	prev;
 	}
 	
 	/**
-	 * 
-	 * @param other
-	 * @return
+	 * Összehasonlítás egy másik csomóponttal a minDistance alapján.
+	 * @param other A másik csomópont.
+	 * @return Az összehasonlítás eredménye
 	 */
 	public int compareTo(Node other){
 		return Integer.compare(minDistance, other.getMinDistance());
