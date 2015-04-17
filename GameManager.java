@@ -10,64 +10,65 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
+ * A programot irányító osztály, felelõsségei:
+ * Pálya/robotok inicializálása, játék indítása,
+ * játékosok/robotok léptetése, játék vége, 
+ * kommunikáció a felhasználói felülettel.
  */
 public class GameManager {
 	
 //privát adattagok kezdete
-
 	/**
-	 * 
-	 */
-	private List<Robot> robots;
-
-	/**
-	 * 
+	 * Referencia a pályára
 	 */
 	private Map map;
 
 	/**
-	 * 
+	 *  Számon tartja épp melyik játékos van a soron.
 	 */
 	private int currentPlayer;
 
 	/**
-	 * 
+	 * Számon tartja épp melyik körben vannak a játékosok.
 	 */
 	private int round;
 //privát adattagok vége
 
 //statikus adattagok kezdete
 	/**
-	 * 
+	 * Lista a pályán lévõ olajokról
 	 */
 	public static List<Oil> oilList			=	new ArrayList<Oil>();
 
 	/**
-	 * 
+	 * Lista a pályán lévõ csapdákról
 	 */
 	public static List<Trap> trapList		=	new ArrayList<Trap>();
 	
 	/**
-	 * 
+	 * Lista a pályán lévõ robotokról
+	 */
+	public static List<Robot> robots		=	new ArrayList<Robot>(4);
+	
+	/**
+	 * Lista a pályán lévõ kisrobotokról
 	 */
 	public static List<Cleaner> cleaners	=	new ArrayList<Cleaner>();
 //statikus adattagok vége
 	
 //publikus metódusok kezdete
 	/**
-	 * 
+	 * Konstruktor. Inicializálja az attribútumokat.
 	 */
 	public GameManager(){
 		this.currentPlayer		=	0;
 		this.round				=	0;
-		this.robots				=	new ArrayList<Robot>(4);
 		this.map				=	new Map("test.map");
 	}
 
 	/**
-	 * 
-	 * @param filename
+	 * Betölti a pályát egy fájlból, és létrehozza a robotokat.
+	 * @param filename A fájl neve amiben a pálya van.
 	 */
 	public void LoadMap(String filename){
 		try {
@@ -76,7 +77,7 @@ public class GameManager {
 				File robotsFile	=	new File(filename+".robots");
 				if(robotsFile.exists()){													//ha létezik a robotok adatait tartalmazó fájl
 					Robot.statid=0;															//új betöltésnél megint nulláról induljon
-					this.robots.clear();													//ez sem árt, ha kiürítjük más robotok betöltése elõtt
+					GameManager.robots.clear();												//ez sem árt, ha kiürítjük más robotok betöltése elõtt
 					this.currentPlayer=0;
 					this.round=0;
 					GameManager.cleaners.clear();											//szintén
@@ -84,7 +85,7 @@ public class GameManager {
 				    while(BR.ready()){														//amíg van adat a robotok adatait tartalmazó fájlban
 				    	String[] p=BR.readLine().split("\\s+");								//feldarabolja a beolvasott stringet space-enként
 				    	if(p.length>=4){													//robotok konstruktorában mapon kívül még kell 2 pont, ezért a legalább 4
-				    		this.robots.add(new Robot(this.map, new Point(Integer.parseInt(p[0]), Integer.parseInt(p[1])), new Point(Integer.parseInt(p[2]), Integer.parseInt(p[3]))));
+				    		GameManager.robots.add(new Robot(this.map, new Point(Integer.parseInt(p[0]), Integer.parseInt(p[1])), new Point(Integer.parseInt(p[2]), Integer.parseInt(p[3]))));
 				    	}
 				    }
 				    BR.close();
@@ -96,7 +97,7 @@ public class GameManager {
 	}
 
 	/**
-	 * 
+	 * Elindítja a játékot.
 	 */
 	public void start(){
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -123,7 +124,7 @@ public class GameManager {
 						File robotsFile=new File(splittedCommand[1]);
 						if(robotsFile.exists()){													//ha létezik a robotok adatait tartalmazó fájl
 							Robot.statid=0;															//nem árt nullázni
-							this.robots.clear();													//ezt sem árt üríteni
+							GameManager.robots.clear();												//ezt sem árt üríteni
 							BufferedReader BR = new BufferedReader(new FileReader(robotsFile));
 						    while(BR.ready()){														//amíg van adat a robotok adatait tartalmazó fájlban
 						    	String[] p=BR.readLine().split("\\s+");								//feldarabolja a beolvasott stringet space-enként
@@ -132,7 +133,7 @@ public class GameManager {
 						    		int y1	=	Integer.parseInt(p[1]);
 						    		int x2	=	Integer.parseInt(p[2]);
 						    		int y2	=	Integer.parseInt(p[3]);
-						    		this.robots.add(new Robot(this.map, new Point(x1, y1), new Point(x2, y2)));
+						    		GameManager.robots.add(new Robot(this.map, new Point(x1, y1), new Point(x2, y2)));
 						    	}
 						    }
 						    BR.close();
@@ -154,13 +155,13 @@ public class GameManager {
 								oils[j].roundElapsed();
 							}
 							int robotsAlive=0;
-							for(Robot r : this.robots){						//megszámolja hány robot "él" még
+							for(Robot r : GameManager.robots){				//megszámolja hány robot "él" még
 								if(r.isAlive()){
 									robotsAlive=robotsAlive+1;
 								}
 							}
 							round=round+1;
-							if((round>=20 || robotsAlive<=1) && this.robots.size()>=2 ){				//ha csak 1 robot él, vagy vége a játéknak (eltelt 20 kör)
+							if((round>=20 || robotsAlive<=1) && GameManager.robots.size()>=2 ){		//ha csak 1 robot él, vagy vége a játéknak (eltelt 20 kör)
 								this.end();
 							}
 						}
@@ -173,8 +174,8 @@ public class GameManager {
 						int id		=	Integer.parseInt(splittedCommand[1]);
 						int x		=	Integer.parseInt(splittedCommand[2]);
 						int y		=	Integer.parseInt(splittedCommand[3]);
-						if(id>=0 && id<this.robots.size())
-							this.robots.get(id).jump(new Point(x,y));		//id.-edik robotot ugratja, az (x,y) módosító sebesség vektorral
+						if(id>=0 && id<GameManager.robots.size())
+							GameManager.robots.get(id).jump(new Point(x,y));		//id.-edik robotot ugratja, az (x,y) módosító sebesség vektorral
 					}
 				}
 	//placeTrap
@@ -183,12 +184,12 @@ public class GameManager {
 					if(splittedCommand.length>=3){
 						int id		=	Integer.parseInt(splittedCommand[1]);
 						int type	=	Integer.parseInt(splittedCommand[2]);
-						if(id>=0 && id<this.robots.size()){					//id.edik robot lerak egy csapdát, a type-nak megfelelõen 1-ragacs, 2-olaj
+						if(id>=0 && id<GameManager.robots.size()){					//id.edik robot lerak egy csapdát, a type-nak megfelelõen 1-ragacs, 2-olaj
 							if(type==1){
-								this.robots.get(id).placeGoo();
+								GameManager.robots.get(id).placeGoo();
 							}
 							else if(type==2){
-								this.robots.get(id).placeOil();
+								GameManager.robots.get(id).placeOil();
 							}
 						}
 					}
@@ -218,7 +219,7 @@ public class GameManager {
 				}
 	//listRobots
 				else if(command.equals("listRobots")){
-					for(Robot robot : this.robots)			//konzolra kilistázza a robotokat
+					for(Robot robot : GameManager.robots)	//konzolra kilistázza a robotokat
 						robot.Print();
 				}
 	//listCleaners
@@ -233,7 +234,7 @@ public class GameManager {
 	}
 
 	/**
-	 * 
+	 * Minden hívásra a következõ játékos robotja ugrik.
 	 */
 	public void step(){
 		int x,y;
@@ -250,9 +251,9 @@ public class GameManager {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		this.robots.get(currentPlayer).jump(new Point(x,y));
+		GameManager.robots.get(currentPlayer).jump(new Point(x,y));
 		currentPlayer	=	currentPlayer+1;
-		if(currentPlayer==this.robots.size()){
+		if(currentPlayer==GameManager.robots.size()){
 			Cleaner[] cleanersArr=GameManager.cleaners.toArray(new Cleaner[GameManager.cleaners.size()]);
 			for(int j=0;j<cleanersArr.length;++j){
 				cleanersArr[j].move();
@@ -262,7 +263,7 @@ public class GameManager {
 				oils[j].roundElapsed();
 			}
 			int robotsAlive=0;
-			for(Robot r : this.robots){
+			for(Robot r : GameManager.robots){
 				if(r.isAlive()){
 					robotsAlive=robotsAlive+1;
 				}
@@ -277,25 +278,25 @@ public class GameManager {
 	}
 
 	/**
-	 * 
+	 * Véget vet a futó játéknak.
 	 */
 	public void end(){
 		this.showResults();
 	}
 
 	/**
-	 * 
+	 * Megjeleníti a robotok megtett távolságait.
 	 */
 	public void showResults(){
 		float max=0;
 		int maxIndex=0;
-		for(int i=0;i<this.robots.size();++i){
-			if(this.robots.get(i).isAlive() && max<this.robots.get(i).getRouteTravelled()){		//az "élõ" robotok közül megkeresi melyik robot tette meg a legtöbb távot
-				max=this.robots.get(i).getRouteTravelled();
+		for(int i=0;i<GameManager.robots.size();++i){
+			if(GameManager.robots.get(i).isAlive() && max<GameManager.robots.get(i).getRouteTravelled()){	//az "élõ" robotok közül megkeresi melyik robot tette meg a legtöbb távot
+				max=GameManager.robots.get(i).getRouteTravelled();
 				maxIndex=i;
 			}
 		}
-		System.out.println("Robot id:"+maxIndex+" nyert!");										//merthogy az a robot nyerte meg a játékot
+		System.out.println("Robot id:"+maxIndex+" nyert!");													//merthogy az a robot nyerte meg a játékot
 	}
 	
 	public static void main(String[] args){

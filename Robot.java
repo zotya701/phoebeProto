@@ -281,6 +281,14 @@ public class Robot implements Landable, Jumping{
 		this.state=RobotState.Eliminated;
 		this.currentField.left(this);
 	}
+	
+	/**
+	 * Visszatér a robot pozíciójával
+	 * @return A robot pozíciója
+	 */
+	public Point getPosition(){
+		return this.position;
+	}
 //publikus metódusok vége
 }
 

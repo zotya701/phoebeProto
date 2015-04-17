@@ -11,37 +11,39 @@ import java.util.List;
 import java.util.PriorityQueue;
 
 /**
- * 
+ * A játék pályájának tárolása, robotok új pozíciójának kiszámolása 
+ * a robot jelenlegi pozíciójának és sebességvektorának függvényében, 
+ * robotok ugráskor megtett távolságának kiszámítása.
  */
 public class Map implements Printable{
 	
 //privát adattagok kezdete
 	/**
-	 * 
+	 * Referenciát tárol a pálya mezõire.
 	 */
 	private List<List<Field>> fields;
 
 	/**
-	 * 
+	 * Csomópontok az útvonalkereséshez.
 	 */
 	private List<List<Node>> nodes;
 
 	/**
-	 * 
+	 * A pálya mérete.
 	 */
 	private Point size;
 	
 	/**
-	 * 
+	 *  Referencia a pályán kívül esõ mezõket reprezentáló objektumra.
 	 */
 	private OutsideField outside;
 //privát adattagok vége
 
 //publikus metódusok kezdete
 	/**
-	 * 
-	 * @param filename
-	 * @param trapList
+	 * Konstruktor. Betölti a pályát a filename nevû fájlból, 
+	 * és elhelyezi a mezõkön a csapdákat, ha vannak rajtuk.
+	 * @param filename A fájl neve amibõl betöltjük a pályát
 	 */
 	public Map(String filename){
 		this.outside	=	new OutsideField();
@@ -51,45 +53,45 @@ public class Map implements Printable{
 		GameManager.oilList.clear();
 		
 		try {
-			File map=new File(filename);
-			if(map.exists()){
+			File map=new File(filename);																	//a fájl neve amibõl betöltjük a pályát
+			if(map.exists()){																				//csak akkor kell csinálni bármit, ha létezik a fájl 
 				BufferedReader br	=	new BufferedReader(new FileReader(map));
-				if(br.ready()){
-					String[] size=br.readLine().split("\\s+");
-			    	if(size.length>=2){
-			    		this.size	=	new Point(Integer.parseInt(size[0]), Integer.parseInt(size[1]));
+				if(br.ready()){																				//ha van valami amit be lehetne olvasni
+					String[] size=br.readLine().split("\\s+");												//a fájl formátum miatt elsõ sor a méret
+			    	if(size.length>=2){																		//legalább 2 számnak kellene lennie a fájl elsõ sorában
+			    		this.size	=	new Point(Integer.parseInt(size[0]), Integer.parseInt(size[1]));	//pálya méretének beállítása size[0]-szélesség, size[1]-magasság
 			    		for(int i=0; i<this.size.y;++i){
 			    			this.fields.add(i, new ArrayList<Field>());
 			    			this.nodes.add(i, new ArrayList<Node>());
 			    		}
 			    	}
 				}
-				List<String> lines=new ArrayList<String>();
-				for(int y=0;y<this.size.y && br.ready();++y){
-			    	String line	=	br.readLine();
-			    	lines.add(line);
-			    	for(int x=0;x<this.size.x && x<line.length();++x){
-			    		if(line.charAt(x)=='0'){
-			    			this.fields.get(y).add(x, new NormalField());
+				List<String> lines=new ArrayList<String>();						//ebben a pályát tartalmazó fájl sorai lesznek, hogy meglehessen csinálni a gráfot
+				for(int y=0;y<this.size.y && br.ready();++y){					//addig olvassa a fájlt amíg el nem érte a magasság-adik sort, vagy a fájlnak idõ elõtt vége (bár ekkor biztos lesznek gondok)
+			    	String line	=	br.readLine();								//sor beolvasása
+			    	lines.add(line);											//sor hozzáadások a sorokhoz
+			    	for(int x=0;x<this.size.x && x<line.length();++x){			//aktuális soron végighaladva létrehozza a megfelelõ dolgokat
+			    		if(line.charAt(x)=='0'){								//ha 0, akkor ott egy üres mezõ van
+			    			this.fields.get(y).add(x, new NormalField());		//be is állítja a megfelelõ pozícióra az üres mezõt
 			    		}
-			    		else if(line.charAt(x)=='#'){
-			    			this.fields.get(y).add(x, this.outside);
+			    		else if(line.charAt(x)=='#'){							//ha #, akkor ütt árok van
+			    			this.fields.get(y).add(x, this.outside);			//be is állítja a megfelelõ pozícióra az árkot
 			    		}
-			    		else if(line.charAt(x)=='1'){
-			    			NormalField nf=new NormalField();
-			    			nf.addTrap(new Goo(new Point(x,y)));
-			    			this.fields.get(y).add(x, nf);
+			    		else if(line.charAt(x)=='1'){							//ha 1, akkor ott egy normál mezõ van, amin van egy ragacsfolt
+			    			NormalField nf=new NormalField();					//üres mezõ létrehozása
+			    			nf.addTrap(new Goo(new Point(x,y)));				//a mezõn elhejyezi a csapdát
+			    			this.fields.get(y).add(x, nf);						//be állítja a megfelelõ pozícióra a mezõt
 			    		}
-			    		else if(line.charAt(x)=='2'){
-			    			NormalField nf=new NormalField();
-			    			nf.addTrap(new Oil(new Point(x,y)));
-			    			this.fields.get(y).add(x, nf);
+			    		else if(line.charAt(x)=='2'){							//ha 2, akkor ott egy normál mezõ van, amin van egy olajfolt
+			    			NormalField nf=new NormalField();					//üres mezõ létrehozása
+			    			nf.addTrap(new Oil(new Point(x,y)));				//a mezõn elhejyezi a csapdát
+			    			this.fields.get(y).add(x, nf);						//be állítja a megfelelõ pozícióra a mezõt
 			    		}
-			    		this.nodes.get(y).add(x, new Node(new Point(x, y)));
+			    		this.nodes.get(y).add(x, new Node(new Point(x, y)));	//gráfban lérehozza a megfelelõ pozícióhoz tartozó csúcsot a megfelelõ pozíción a megfelelõ pozícióval
 			    	}
 				}
-				this.createGraph(lines);
-			    br.close();
+				this.createGraph(lines);										//gráf csúcsai már megvannak, ez beállítja az éleket is.
+			    br.close();														//fájl lezárása
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -97,7 +99,7 @@ public class Map implements Printable{
 	}
 	
 	/**
-	 * 
+	 * Az objektum attribútumainak kiíratása a teszteléshez.
 	 */
 	public void Print(){
 		System.out.println(this.size.x+" "+this.size.y);
@@ -110,69 +112,70 @@ public class Map implements Printable{
 	}
 	
 	/**
-	 * 
-	 * @param coord
-	 * @return
+	 * Visszatér a coord helyen található mezõvel.
+	 * @param coord A mezõ koordinátái amit le akarunk kérdezni
+	 * @return A megfelelõ koordinátán lévõ mezõvel tér vissza
 	 */
 	public Field getField(Point coord){
-		if(coord.x<0 || coord.y<0 || coord.x>=this.size.x || coord.y>=this.size.y){
-			return this.outside;
+		if(coord.x<0 || coord.y<0 || coord.x>=this.size.x || coord.y>=this.size.y){		//kivételt dobna, ha pályán kívüli mezõt kérnénk le
+			return this.outside;														//azonban pályán kívül mindenhol árok van, így ez megoldva
 		}
 		else return fields.get(coord.y).get(coord.x);
 	}
 	
 	/**
-	 * 
-	 * @param currentPos
-	 * @param vel
-	 * @return
+	 * Kiszámolja az új pozíciót currentPos és vel szerint, majd visszatér vele.
+	 * @param currentPos A kezdõpozíció
+	 * @param vel A sebességvektor
+	 * @return A kezdõpozíció és a sebességvektor alapján kiszámított koordináta
 	 */
 	public Point getNewPos(Point currentPos, Point vel){
-		currentPos.translate(vel.x, vel.y);
+		currentPos.translate(vel.x, vel.y);		//új pózíciót megkapjuk akkor, ha a régit eltoljuk a sebesség vektorral
 		return currentPos;
 	}
 	
 	/**
-	 * 
-	 * @param s
-	 * @param d
-	 * @return
+	 * Kiszámolja a távolságot a pálya két pontja között, majd visszatér vele.
+	 * @param s Az egyik pont
+	 * @param d A másik pont
+	 * @return A két pont közötti távolság
 	 */
 	public float calculateDistance(Point s, Point d){
+		//szokásos gyökalatt(x^2+y^2) miután d vektorból kivontuk s vektort, azaz s->d vektor hossza (source, destination)
 		float dist=(float)(Math.pow((d.x-s.x)*(d.x-s.x)+(d.y-s.y)*(d.y-s.y), 0.5));
 		return dist;
 	}
 	
 	/**
-	 * 
-	 * @param source
-	 * @return
+	 * Kiszámolja egy adott kisrobottól a legrövidebb útvonalat a legközelebbi csapdához dijkstra algoritmusát használva.
+	 * @param c A kisrobot
+	 * @return Az útvonal elsõ pontja
 	 */
-	public Point getRouteToTrap(Point source, Cleaner c){
-		this.computePaths(this.nodes.get(source.y).get(source.x));
-		int min			=	Integer.MAX_VALUE;
-		Point minPoint	=	new Point(source);
-		for(Trap trap : GameManager.trapList){//megkeressük melyik csapdához lehet a legrövidebb úton elmenni
-			if(min>this.nodes.get(trap.getPosition().y).get(trap.getPosition().x).getMinDistance()){
-				min=this.nodes.get(trap.getPosition().y).get(trap.getPosition().x).getMinDistance();
-				minPoint=trap.getPosition();
-				c.setTarget(trap);
+	public Point getRouteToTrap(Cleaner c){
+		this.computePaths(this.nodes.get(c.getPosition().y).get(c.getPosition().x));										//a gráfban az adott takarítórobot helyéhez képest kiszámolja a legrövedd utakat az összes többi koordinátára
+		int min			=	Integer.MAX_VALUE;															//legközelebbi csapda kereséséhez
+		Point minPoint	=	new Point(c.getPosition());															//legközelebbi csapda koordinátájához
+		for(Trap trap : GameManager.trapList){															//megkeressük melyik csapdához lehet a legrövidebb úton elmenni
+			if(min>this.nodes.get(trap.getPosition().y).get(trap.getPosition().x).getMinDistance()){	//ha találtunk egy csapdát ahova rövidebb úton jutunk el mint az elõzõ csapdához,
+				min=this.nodes.get(trap.getPosition().y).get(trap.getPosition().x).getMinDistance();	//min értéke az szükséges út hossza lesz
+				minPoint=trap.getPosition();															//minPoint értéke pedig a legközelebbi csapda pozíciója
+				c.setTarget(trap);																		//beállítja a takarítórobot targetjét, azaz hogy melyik csapdát szedje majd le, miután 2 körig takarította
 			}
 		}
-		List<Node> shortestPath	=	this.getShortestPathTo(this.nodes.get(minPoint.y).get(minPoint.x));
-		if(shortestPath.size()>1)
-			minPoint=shortestPath.get(1).getCoord();
-		else minPoint=shortestPath.get(0).getCoord();
+		List<Node> shortestPath	=	this.getShortestPathTo(this.nodes.get(minPoint.y).get(minPoint.x));	//itt már megtaláltuk a legközelebbi csapdát, most visszakérjük a hozzá tartozó legrövidebb utat
+		if(shortestPath.size()>1)							//ha legalább 1 ugrás kell még a csapdáig
+			minPoint=shortestPath.get(1).getCoord();		//minPoint az út következõ koordinátája lesz
+		else minPoint=shortestPath.get(0).getCoord();		//a 0. elem mindig az ahol a takarító robot áll. ha erre állítja be minPointot, az azt jelenti, hogy egy csapdán áll
 		return minPoint;
 	}
 	
 	/**
-	 * 
+	 * Az útvonalkereséshez a gráf létrhozása.
 	 */
 	public void createGraph(List<String> lines){
 		for(int y=0;y<this.size.y;++y){
 			for(int x=0;x<this.size.x;++x){
-				if(lines.get(y).charAt(x)!='_'){
+				if(lines.get(y).charAt(x)!='_'){	//a normál mezõknek megfelelõ csúcsokat nem köti össze az árkokkal
 					if(x>0)
 						if(lines.get(y).charAt(x-1)!='#')
 							this.nodes.get(y).get(x).addEdge(new Edge(this.nodes.get(y).get(x-1)));//balra
@@ -191,47 +194,58 @@ public class Map implements Printable{
 	}
 	
 	/**
-	 * 
-	 * @param source
+	 * Az útvonal kiszámítása
+	 * @param source A kiindulási pont
 	 */
 	public void computePaths(Node source){
-		for(int y=0;y<this.size.y;++y){
+		for(int y=0;y<this.size.y;++y){			//alaphelyzetbe állítja a gráfot
 			for(int x=0;x<this.size.x;++x){
 				this.nodes.get(y).get(x).setPrevious(null);
 				this.nodes.get(y).get(x).setMinDistance(Integer.MAX_VALUE);
 			}
 		}
 		
-        source.setMinDistance(0);
-        PriorityQueue<Node> NodeQueue = new PriorityQueue<Node>();
-      	NodeQueue.add(source);
-      	
-		while (!NodeQueue.isEmpty()) {
-		    Node u = NodeQueue.poll();
-            for (Edge e : u.getAdjacencies()){
-                Node v = e.getTarget();
-                //double weight = e.getWeight();
-                int distanceThroughU = u.getMinDistance() + 1;
-				if (distanceThroughU < v.getMinDistance()) {
-				    NodeQueue.remove(v);
-				    v.setMinDistance(distanceThroughU);
-				    v.setPrevious(u);
-				    NodeQueue.add(v);
-				}
+        source.setMinDistance(0);										//a forrásnak legrövidebb útnak értelemszerûen 0-t állít be
+        PriorityQueue<Node> NodeQueue = new PriorityQueue<Node>();		//a még nem meglátogatott csúcsok
+      	NodeQueue.add(source);											//hisz még nem látogattuk meg a forrást
+
+		while (!NodeQueue.isEmpty()) {									//amíg van meg nem látogatott csúcs
+		    Node u = NodeQueue.poll();									//u a lista elsõ eleme lesz, és egyben törlõdik is ez az elem a listábõl
+            for (Edge e : u.getAdjacencies()){							//u minden szomszédjára
+            	boolean robotOnNode=false;
+            	Node v = e.getTarget();
+            	for(int i=0;i<GameManager.cleaners.size();++i){
+            		if(GameManager.cleaners.get(i).getPosition().equals(v.getCoord()))
+            			robotOnNode=true;
+            	}
+            	for(int i=0;i<GameManager.robots.size();++i){
+            		if(GameManager.robots.get(i).getPosition().equals(v.getCoord()))
+            			robotOnNode=true;
+            	}
+            	if(robotOnNode==false){
+                    int distanceThroughU = u.getMinDistance() + 1;
+    				if (distanceThroughU < v.getMinDistance()) {			//ha talált egy rövidebb utat s bõl u egyik szomszédjára
+    				    NodeQueue.remove(v);								//a szomszédot kiveszi a listából
+    				    v.setMinDistance(distanceThroughU);					//beállítja az új távolságot
+    				    v.setPrevious(u);									//és hogy ide eljussunk melyik az elõzõ csúcs
+    				    NodeQueue.add(v);									//majd visszarakja  a listába
+    				}
+            	}
             }
 		}
     }
 	
 	/**
-	 * 
-	 * @param target
-	 * @return
+	 * A source és a target közötti legrövidebb útvonal lekérdezése.
+	 * @param target Az utolsó Node 
+	 * (minden Node tartalmazza a legrövidebb úton belül az elõzõ Node-t, így megyünk végig a láncolt listán)
+	 * @return A legrövidebb útvonal csomópontjaiból álló listával tér vissza.
 	 */
     public List<Node> getShortestPathTo(Node target){
         List<Node> path = new ArrayList<Node>();
-        for (Node node = target; node != null; node = node.getPrevious())
+        for (Node node = target; node != null; node = node.getPrevious())	//felépíti visszafelé az utat
             path.add(node);
-        Collections.reverse(path);
+        Collections.reverse(path);											//itt megfordítja
         return path;
     }
 //publikus metódusok vége
