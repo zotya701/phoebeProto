@@ -10,52 +10,55 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
+ * A programot irányító osztály, felelõsségei:
+ * Pálya/robotok inicializálása, játék indítása,
+ * játékosok/robotok léptetése, játék vége, 
+ * kommunikáció a felhasználói felülettel.
  */
 public class GameManager {
 	
 //privát adattagok kezdete
 	/**
-	 * 
+	 * Referencia a pályára
 	 */
 	private Map map;
 
 	/**
-	 * 
+	 *  Számon tartja épp melyik játékos van a soron.
 	 */
 	private int currentPlayer;
 
 	/**
-	 * 
+	 * Számon tartja épp melyik körben vannak a játékosok.
 	 */
 	private int round;
 //privát adattagok vége
 
 //statikus adattagok kezdete
 	/**
-	 * 
+	 * Lista a pályán lévõ olajokról
 	 */
 	public static List<Oil> oilList			=	new ArrayList<Oil>();
 
 	/**
-	 * 
+	 * Lista a pályán lévõ csapdákról
 	 */
 	public static List<Trap> trapList		=	new ArrayList<Trap>();
 	
 	/**
-	 * 
+	 * Lista a pályán lévõ robotokról
 	 */
 	public static List<Robot> robots		=	new ArrayList<Robot>(4);
 	
 	/**
-	 * 
+	 * Lista a pályán lévõ kisrobotokról
 	 */
 	public static List<Cleaner> cleaners	=	new ArrayList<Cleaner>();
 //statikus adattagok vége
 	
 //publikus metódusok kezdete
 	/**
-	 * 
+	 * Konstruktor. Inicializálja az attribútumokat.
 	 */
 	public GameManager(){
 		this.currentPlayer		=	0;
@@ -64,8 +67,8 @@ public class GameManager {
 	}
 
 	/**
-	 * 
-	 * @param filename
+	 * Betölti a pályát egy fájlból, és létrehozza a robotokat.
+	 * @param filename A fájl neve amiben a pálya van.
 	 */
 	public void LoadMap(String filename){
 		try {
@@ -94,7 +97,7 @@ public class GameManager {
 	}
 
 	/**
-	 * 
+	 * Elindítja a játékot.
 	 */
 	public void start(){
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -231,7 +234,7 @@ public class GameManager {
 	}
 
 	/**
-	 * 
+	 * Minden hívásra a következõ játékos robotja ugrik.
 	 */
 	public void step(){
 		int x,y;
@@ -275,14 +278,14 @@ public class GameManager {
 	}
 
 	/**
-	 * 
+	 * Véget vet a futó játéknak.
 	 */
 	public void end(){
 		this.showResults();
 	}
 
 	/**
-	 * 
+	 * Megjeleníti a robotok megtett távolságait.
 	 */
 	public void showResults(){
 		float max=0;
