@@ -76,25 +76,25 @@ public class Cleaner implements Landable, Jumping{
 	 * 
 	 */
 	public void move(){
-		if(this.state!=RobotState.Eliminated){
+		if(this.state!=RobotState.Eliminated){										//csak akkor lép, ha "él"
 			Point oldPos	=	new Point(this.position);
-			this.currentField.left(this);
-			if(this.state==RobotState.Normal){
-				this.position	=	this.map.getRouteToTrap(this.position, this);
+			this.currentField.left(this);											//elhagyja a mezõt amin áll
+			if(this.state==RobotState.Normal){										//csak akkor, ha normál állapotban van
+				this.position	=	this.map.getRouteToTrap(this.position, this);	//lekéri a map-tõl az új pozícióját
 			}
-			map.getField(this.position).arrived(this);
-			if(this.state==RobotState.Unturnable){//ha a takarítórobot elõtt robot vagy takarítórobot van, nem mozdul.
-				this.state=RobotState.Normal;
-				this.currentField.left(this);
-				this.position	=	oldPos;
-				map.getField(this.position).arrived(this);
+			map.getField(this.position).arrived(this);								//megérkezik az új mezõre
+			if(this.state==RobotState.Unturnable){									//ha az új mezõn ütközött, unturnable lesz az állapota így ez is lefut
+				this.state=RobotState.Normal;										//és ilyenkor visszamegy oda ahonnan jött
+				this.currentField.left(this);										//ez a játékban úgy jelenik meg, hogy
+				this.position	=	oldPos;											//ha a takarítórobot elõtt van valamilyen más robot,
+				map.getField(this.position).arrived(this);							//akkor nem mozdul.
 			}
-			if(this.target!=null){
-				if(target.getPosition().equals(oldPos)){
-					this.cleaningStage	=	this.cleaningStage+1;
+			if(this.target!=null){													//csak akkor ha van egyáltalán target
+				if(target.getPosition().equals(oldPos)){							//és annak pozíciója megegyezik a takarítórobot pozíciójával
+					this.cleaningStage	=	this.cleaningStage+1;					//akkor takarítja a foltot
 				}
 			}
-			if(this.cleaningStage>=2){
+			if(this.cleaningStage>=2){												//2 kör alatt feltakarítja a foltot
 				this.target.cleanup();
 				this.target	=	null;
 				this.cleaningStage=0;
@@ -144,10 +144,10 @@ public class Cleaner implements Landable, Jumping{
 	 * 
 	 */
 	public void destroy(){
-		this.currentField.addTrap(new Oil(this.position));
+		this.currentField.addTrap(new Oil(this.position));	//olajfoltot lak re a mezõre amin van
 		this.state=RobotState.Eliminated;
-		this.currentField.left(this);
-		GameManager.cleaners.remove(this);
+		this.currentField.left(this);						//leszedi magát a mezõrõl amin van
+		GameManager.cleaners.remove(this);					//törli magát a listából
 	}
 
 	/**
@@ -168,6 +168,7 @@ public class Cleaner implements Landable, Jumping{
 	 * 
 	 */
 	public void Print(){
+		//Cleaner pos:(<posx>,<posy>) stage:<cleaningStage>
 		System.out.println("Cleaner pos:("+this.position.x+","+this.position.y+") stage:"+this.cleaningStage);
 	}
 
