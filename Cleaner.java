@@ -50,9 +50,9 @@ public class Cleaner implements Landable, Jumping{
 		this.state			=	RobotState.Normal;
 		this.map			=	map;
 		this.position		=	pos;
-		this.currentField	=	null;
 		this.cleaningStage	=	0;
 		this.target			=	null;
+		this.map.getField(this.position).arrived(this);
 	}
 	
 	/**
@@ -69,6 +69,7 @@ public class Cleaner implements Landable, Jumping{
 	 */
 	public void normalField(NormalField nf){
 		this.currentField=nf;
+		this.currentField.staying(this);
 	}
 
 	/**
@@ -76,18 +77,27 @@ public class Cleaner implements Landable, Jumping{
 	 */
 	public void move(){
 		if(this.state!=RobotState.Eliminated){
+			Point oldPos	=	new Point(this.position);
 			this.currentField.left(this);
-			if(this.state==RobotState.Normal)
+			if(this.state==RobotState.Normal){
 				this.position	=	this.map.getRouteToTrap(this.position, this);
-			map.getField(this.position).arrived(this);
-			
-			if(target.getPosition().equals(this.position)){
-				this.cleaningStage=this.cleaningStage+1;
 			}
-			else this.cleaningStage=0;
-			
+			map.getField(this.position).arrived(this);
+			if(this.state==RobotState.Unturnable){//ha a takarítórobot elõtt robot vagy takarítórobot van, nem mozdul.
+				this.state=RobotState.Normal;
+				this.currentField.left(this);
+				this.position	=	oldPos;
+				map.getField(this.position).arrived(this);
+			}
+			if(this.target!=null){
+				if(target.getPosition().equals(oldPos)){
+					this.cleaningStage	=	this.cleaningStage+1;
+				}
+			}
 			if(this.cleaningStage>=2){
 				this.target.cleanup();
+				this.target	=	null;
+				this.cleaningStage=0;
 			}
 		}
 	}

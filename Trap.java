@@ -36,5 +36,5 @@ public interface Trap extends Landable{
 	 * @return
 	 */
 	public Point getPosition();
-	
+
 }
