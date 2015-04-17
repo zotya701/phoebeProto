@@ -15,7 +15,7 @@ import java.util.PriorityQueue;
  */
 public class Map implements Printable{
 	
-//Privát adattagok kezdete
+//privát adattagok kezdete
 	/**
 	 * 
 	 */
@@ -30,17 +30,12 @@ public class Map implements Printable{
 	 * 
 	 */
 	private Point size;
-
-	/**
-	 * 
-	 */
-	private List<Trap> trapList;
 	
 	/**
 	 * 
 	 */
 	private OutsideField outside;
-//Privát adattagok vége
+//privát adattagok vége
 
 //publikus metódusok kezdete
 	/**
@@ -48,13 +43,12 @@ public class Map implements Printable{
 	 * @param filename
 	 * @param trapList
 	 */
-	public Map(String filename, List<Trap> trapList){
-		this.trapList	=	trapList;
+	public Map(String filename){
 		this.outside	=	new OutsideField();
 		this.fields		=	new ArrayList<List<Field>>();
 		this.nodes		=	new ArrayList<List<Node>>();
-		Oil.trapList.clear();
-		Oil.oilList.clear();
+		GameManager.trapList.clear();
+		GameManager.oilList.clear();
 		
 		try {
 			File map=new File(filename);
@@ -121,10 +115,18 @@ public class Map implements Printable{
 	 * @return
 	 */
 	public Field getField(Point coord){
-		return fields.get(coord.y).get(coord.x);
+		if(coord.x<0 || coord.y<0 || coord.x>=this.size.x || coord.y>=this.size.y){
+			return this.outside;
+		}
+		else return fields.get(coord.y).get(coord.x);
 	}
 	
-	
+	/**
+	 * 
+	 * @param currentPos
+	 * @param vel
+	 * @return
+	 */
 	public Point getNewPos(Point currentPos, Point vel){
 		currentPos.translate(vel.x, vel.y);
 		return currentPos;
@@ -146,14 +148,15 @@ public class Map implements Printable{
 	 * @param source
 	 * @return
 	 */
-	public Point getRouteToTrap(Point source){
+	public Point getRouteToTrap(Point source, Cleaner c){
 		this.computePaths(this.nodes.get(source.y).get(source.x));
 		int min			=	Integer.MAX_VALUE;
 		Point minPoint	=	new Point(source);
-		for(Trap trap : this.trapList){//megkeressük melyik csapdához lehet a legrövidebb úton elmenni
-			if(min<this.nodes.get(trap.getPosition().y).get(trap.getPosition().x).getMinDistance()){
+		for(Trap trap : GameManager.trapList){//megkeressük melyik csapdához lehet a legrövidebb úton elmenni
+			if(min>this.nodes.get(trap.getPosition().y).get(trap.getPosition().x).getMinDistance()){
 				min=this.nodes.get(trap.getPosition().y).get(trap.getPosition().x).getMinDistance();
 				minPoint=trap.getPosition();
+				c.setTarget(trap);
 			}
 		}
 		List<Node> shortestPath	=	this.getShortestPathTo(this.nodes.get(minPoint.y).get(minPoint.x));
@@ -187,7 +190,18 @@ public class Map implements Printable{
 		}
 	}
 	
+	/**
+	 * 
+	 * @param source
+	 */
 	public void computePaths(Node source){
+		for(int y=0;y<this.size.y;++y){
+			for(int x=0;x<this.size.x;++x){
+				this.nodes.get(y).get(x).setPrevious(null);
+				this.nodes.get(y).get(x).setMinDistance(Integer.MAX_VALUE);
+			}
+		}
+		
         source.setMinDistance(0);
         PriorityQueue<Node> NodeQueue = new PriorityQueue<Node>();
       	NodeQueue.add(source);
@@ -207,7 +221,12 @@ public class Map implements Printable{
             }
 		}
     }
-
+	
+	/**
+	 * 
+	 * @param target
+	 * @return
+	 */
     public List<Node> getShortestPathTo(Node target){
         List<Node> path = new ArrayList<Node>();
         for (Node node = target; node != null; node = node.getPrevious())
