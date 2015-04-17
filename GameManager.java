@@ -160,7 +160,7 @@ public class GameManager {
 								}
 							}
 							round=round+1;
-							if(round>=20 || robotsAlive<=1){				//ha csak 1 robot él, vagy vége a játéknak (eltelt 20 kör)
+							if((round>=20 || robotsAlive<=1) && this.robots.size()>=2 ){				//ha csak 1 robot él, vagy vége a játéknak (eltelt 20 kör)
 								this.end();
 							}
 						}
