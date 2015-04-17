@@ -151,7 +151,7 @@ public class Robot implements Landable, Jumping{
 			}
 			this.position=this.map.getNewPos(this.position, this.velocity);
 			this.map.getField(this.position).arrived(this);
-			this.routeTravelled=this.map.calculateDistance(old, this.position);
+			this.routeTravelled=this.routeTravelled+this.map.calculateDistance(old, this.position);
 		}
 	}
 	
