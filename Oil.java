@@ -1,8 +1,6 @@
 package phoebeProto;
 
 import java.awt.Point;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 
@@ -26,16 +24,6 @@ public class Oil implements Trap{
 	private int health;
 //privát adattagok vége
 	
-	/**
-	 * 
-	 */
-	static public List<Oil> oilList=new ArrayList<Oil>();
-	
-	/**
-	 * 
-	 */
-	static public List<Trap> trapList=new ArrayList<Trap>();
-	
 //publikus metódusok kezdete
 	/**
 	 * 
@@ -43,8 +31,8 @@ public class Oil implements Trap{
 	public Oil(Point pos){
 		this.position=pos;
 		this.health=10;
-		Oil.trapList.add(this);
-		Oil.oilList.add(this);
+		GameManager.trapList.add(this);
+		GameManager.oilList.add(this);
 	}
 
 	/**
@@ -57,10 +45,11 @@ public class Oil implements Trap{
 	/**
 	 * 
 	 */
-	public void roundElapse(){
+	public void roundElapsed(){
 		this.health=this.health-1;
-		if(this.health==0)
+		if(this.health==0){
 			this.cleanup();
+		}
 	}
 
 	/**
@@ -90,9 +79,10 @@ public class Oil implements Trap{
 	 * 
 	 */
 	public void cleanup(){
-		this.currentField.left(this);
-		Oil.trapList.remove(this);
-		Oil.oilList.remove(this);
+		if(this.currentField!=null)
+			this.currentField.left(this);
+		GameManager.trapList.remove(this);
+		GameManager.oilList.remove(this);
 	}
 
 	/**
@@ -123,13 +113,6 @@ public class Oil implements Trap{
 	 */
 	public Point getPosition(){
 		return this.position;
-	}
-
-	/**
-	 * 
-	 */
-	public List<Trap> trapList(){
-		return Oil.trapList;
 	}
 //publikus metódusok vége
 }
