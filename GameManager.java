@@ -270,7 +270,7 @@ public class GameManager {
 				oils[j].roundElapsed();
 			}
 			if(round%10==0){
-				for(int y=4;y<this.map.getSize().y;y=y+10){
+				for(y=4;y<this.map.getSize().y;y=y+10){
 					if(GameManager.cleaners.size()<=10){
 						GameManager.cleaners.add(new Cleaner(this.map, new Point(0, y)));
 					}
