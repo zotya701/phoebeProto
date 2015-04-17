@@ -29,8 +29,8 @@ public class Oil implements Trap{
 	 * 
 	 */
 	public Oil(Point pos){
-		this.position=pos;
-		this.health=10;
+		this.position	=	pos;
+		this.health		=	10;
 		GameManager.trapList.add(this);
 		GameManager.oilList.add(this);
 	}
@@ -39,6 +39,7 @@ public class Oil implements Trap{
 	 * 
 	 */
 	public void Print(){
+		//Trap <type> (<x>,<y>) health: <health>
 		System.out.println("Trap oil ("+this.position.x+","+this.position.y+") health: "+this.health);
 	}
 	
@@ -46,9 +47,9 @@ public class Oil implements Trap{
 	 * 
 	 */
 	public void roundElapsed(){
-		this.health=this.health-1;
-		if(this.health==0){
-			this.cleanup();
+		this.health=this.health-1;		//minden körben 1-el csökken az élete
+		if(this.health==0){				//ha elérte a 0-át
+			this.cleanup();				//akkor "felszárad"
 		}
 	}
 
@@ -80,9 +81,9 @@ public class Oil implements Trap{
 	 */
 	public void cleanup(){
 		if(this.currentField!=null)
-			this.currentField.left(this);
-		GameManager.trapList.remove(this);
-		GameManager.oilList.remove(this);
+			this.currentField.left(this);	//törli magát a mezõrõl amin van
+		GameManager.trapList.remove(this);	//a csapdák listájából is törli magát
+		GameManager.oilList.remove(this);	//az olajfoltok listájából is törli magát
 	}
 
 	/**
