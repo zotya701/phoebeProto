@@ -154,9 +154,9 @@ public class GameManager {
 							for(int j=0;j<oils.length;++j){					//mindegyik olajfolt "életét" csökkenti egyel
 								oils[j].roundElapsed();
 							}
-							if(round%10==0){								//minden 10. körben jönnek a takarítórobotok
+							if(round%10==0){								//minden 10. körben tisztítórobotok jutnak be a pályára bal szélrõl
 								for(int y=4;y<this.map.getSize().y;y=y+10){	//a megadott helyekre
-									if(GameManager.cleaners.size()<=10){	//de csak ha még nincs 10 a pályán
+									if(GameManager.cleaners.size()<10){		//de 10nél több egyszerre nem lehet a pályán
 										GameManager.cleaners.add(new Cleaner(this.map, new Point(0, y)));
 									}
 								}
