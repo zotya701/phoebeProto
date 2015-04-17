@@ -1,5 +1,7 @@
 package phoebeProto;
 
+import java.awt.Point;
+
 /**
  *
  */
@@ -42,5 +44,11 @@ public interface Jumping {
 	 * 
 	 */
 	public void destroy();
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Point getPosition();
 	
 }
