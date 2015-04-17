@@ -87,7 +87,7 @@ public class Cleaner implements Landable, Jumping{
 			Point oldPos	=	new Point(this.position);
 			this.currentField.left(this);											//elhagyja a mezõt amin áll
 			if(this.state==RobotState.Normal){										//csak akkor, ha normál állapotban van
-				this.position	=	this.map.getRouteToTrap(this.position, this);	//lekéri a map-tõl az új pozícióját
+				this.position	=	this.map.getRouteToTrap(this);	//lekéri a map-tõl az új pozícióját
 			}
 			map.getField(this.position).arrived(this);								//megérkezik az új mezõre
 			if(this.state==RobotState.Unturnable){									//ha az új mezõn ütközött, unturnable lesz az állapota így ez is lefut
