@@ -62,7 +62,7 @@ public class GameManager {
 	 */
 	public GameManager(){
 		this.currentPlayer		=	0;
-		this.round				=	0;
+		this.round				=	1;
 		this.map				=	new Map("test.map");
 	}
 
@@ -79,7 +79,7 @@ public class GameManager {
 					Robot.statid=0;															//új betöltésnél megint nulláról induljon
 					GameManager.robots.clear();												//ez sem árt, ha kiürítjük más robotok betöltése elõtt
 					this.currentPlayer=0;
-					this.round=0;
+					this.round=1;
 					GameManager.cleaners.clear();											//szintén
 					BufferedReader BR	=	new BufferedReader(new FileReader(robotsFile));
 				    while(BR.ready()){														//amíg van adat a robotok adatait tartalmazó fájlban
@@ -153,6 +153,13 @@ public class GameManager {
 							Oil[] oils=GameManager.oilList.toArray(new Oil[GameManager.oilList.size()]);
 							for(int j=0;j<oils.length;++j){					//mindegyik olajfolt "életét" csökkenti egyel
 								oils[j].roundElapsed();
+							}
+							if(round%10==0){								//minden 10. körben jönnek a takarítórobotok
+								for(int y=4;y<this.map.getSize().y;y=y+10){	//a megadott helyekre
+									if(GameManager.cleaners.size()<=10){	//de csak ha még nincs 10 a pályán
+										GameManager.cleaners.add(new Cleaner(this.map, new Point(0, y)));
+									}
+								}
 							}
 							int robotsAlive=0;
 							for(Robot r : GameManager.robots){				//megszámolja hány robot "él" még
@@ -261,6 +268,13 @@ public class GameManager {
 			Oil[] oils=GameManager.oilList.toArray(new Oil[GameManager.oilList.size()]);
 			for(int j=0;j<oils.length;++j){
 				oils[j].roundElapsed();
+			}
+			if(round%10==0){
+				for(int y=4;y<this.map.getSize().y;y=y+10){
+					if(GameManager.cleaners.size()<=10){
+						GameManager.cleaners.add(new Cleaner(this.map, new Point(0, y)));
+					}
+				}
 			}
 			int robotsAlive=0;
 			for(Robot r : GameManager.robots){

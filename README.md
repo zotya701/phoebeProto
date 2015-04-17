@@ -1,6 +1,6 @@
 		# phoebeProto
 		
-		Szoftverlabor 4 Proto
+		Szoftver labor 4 Proto
 		
 		A forrásfájlok kódolása Cp1250, máséven Windows-1250.
 		

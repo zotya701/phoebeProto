@@ -83,25 +83,23 @@ public class Cleaner implements Landable, Jumping{
 
 	 */
 	public void move(){
-		if(this.state!=RobotState.Eliminated){										//csak akkor lép, ha "él"
+		if(this.state!=RobotState.Eliminated){						//csak akkor lép, ha "él"
 			Point oldPos	=	new Point(this.position);
-			this.currentField.left(this);											//elhagyja a mezõt amin áll
-			if(this.state==RobotState.Normal){										//csak akkor, ha normál állapotban van
+			this.currentField.left(this);							//elhagyja a mezõt amin áll
+			if(this.state==RobotState.Normal){						//csak akkor, ha normál állapotban van
 				this.position	=	this.map.getRouteToTrap(this);	//lekéri a map-tõl az új pozícióját
+				map.getField(this.position).arrived(this);			//megérkezik az új mezõre
 			}
-			map.getField(this.position).arrived(this);								//megérkezik az új mezõre
-			if(this.state==RobotState.Unturnable){									//ha az új mezõn ütközött, unturnable lesz az állapota így ez is lefut
-				this.state=RobotState.Normal;										//és ilyenkor visszamegy oda ahonnan jött
-				this.currentField.left(this);										//ez a játékban úgy jelenik meg, hogy
-				this.position	=	oldPos;											//ha a takarítórobot elõtt van valamilyen más robot,
-				map.getField(this.position).arrived(this);							//akkor nem mozdul.
+			else {													//ilyenkor csak unturnable állapotban lehet
+				this.state=RobotState.Normal;						//ekkor a takarítorobot nem mozdult, de a következõ körben már fog
 			}
-			if(this.target!=null){													//csak akkor ha van egyáltalán target
-				if(target.getPosition().equals(oldPos)){							//és annak pozíciója megegyezik a takarítórobot pozíciójával
-					this.cleaningStage	=	this.cleaningStage+1;					//akkor takarítja a foltot
+			if(this.target!=null){									//csak akkor ha van egyáltalán target
+				if(target.getPosition().equals(oldPos)){			//és annak pozíciója megegyezik a takarítórobot pozíciójával
+																	//azért a lépés elõtti pozíciója, mert amikor ráugrik még nem takarít, csak a következõ körben
+					this.cleaningStage	=	this.cleaningStage+1;	//és ha ez teljesül, akkor lát neki a takarításnak
 				}
 			}
-			if(this.cleaningStage>=2){												//2 kör alatt feltakarítja a foltot
+			if(this.cleaningStage>=2){								//és 2 kör alatt fel is takarítja a foltot
 				this.target.cleanup();
 				this.target	=	null;
 				this.cleaningStage=0;
