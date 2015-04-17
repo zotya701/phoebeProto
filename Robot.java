@@ -217,10 +217,10 @@ public class Robot implements Landable, Jumping{
 	 * Lerak egy olajat a mezõre amin áll.
 	 */
 	public void placeOil(){
-		if(this.gooTraps>0){
+		if(this.gooTraps>0){							//csak akkor rak le olajfoltot, ha van mit lerakni
 			Oil oil=new Oil(this.position);
-			if(this.currentField.addTrap(oil))
-				this.oilTraps	=	this.oilTraps-1;
+			if(this.currentField.addTrap(oil))			//ha sikerült a lerakás
+				this.oilTraps	=	this.oilTraps-1;	//csökkenti a lerakható ragacsfoltok számát
 		}
 	}
 	
@@ -230,6 +230,7 @@ public class Robot implements Landable, Jumping{
 	 * @return A robot sebessége
 	 */
 	public float getSpeed(){
+		//szokásos gyökalatt(x^2+y^2)
 		return (float)(Math.pow(this.velocity.x*this.velocity.x+this.velocity.y*this.velocity.y, 0.5));
 	}
 	
@@ -259,8 +260,10 @@ public class Robot implements Landable, Jumping{
 	 * @param c A Cleaner amire ráugrott
 	 */
 	public void onCleaner(Cleaner c){
-		c.destroy();
-		this.state=RobotState.Unturnable;
+		c.destroy();	//ksirobot megsemmisülésekor azonnal olajfolt keletkezik a mezõn, viszont
+						//ekkor az arrived metódusban nem fog interaktálni az újonnan létrehozott olajfolttal,
+						//mert az még nem szerepel a tömbben
+		this.onOil();	//ezért itt állítjuk be, hogy módosíthatatlan legyen a sebessége egy körig
 	}
 	
 	/**
