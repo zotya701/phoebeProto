@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * 
  */
-public class Node {
+public class Node implements Comparable<Node>{
 
 //privát adattagok kezdete
 	/**
@@ -106,5 +106,5 @@ public class Node {
 	public int compareTo(Node other){
 		return Integer.compare(minDistance, other.getMinDistance());
 	}
-	
+//publikus metódusok vége
 }
