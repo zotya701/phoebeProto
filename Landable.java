@@ -1,5 +1,8 @@
 package phoebeProto;
 
+/**
+ * 
+ */
 public interface Landable extends Printable{
 	
 	/**
