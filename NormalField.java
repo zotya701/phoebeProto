@@ -3,9 +3,15 @@ package phoebeProto;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 
+ */
 public class NormalField implements Field{
 	
 //privát adattagok kezdete
+	/**
+	 * 
+	 */
 	private List<Landable> elements;
 //privát adattagok vége
 	
@@ -29,8 +35,9 @@ public class NormalField implements Field{
 	 * @param j
 	 */
 	public void arrived(Jumping j) {
-		for(int i=0;i<this.elements.size();++i)
-			this.elements.get(i).interact(j);
+		Landable[] elements=this.elements.toArray(new Landable[this.elements.size()]);
+		for(int i=0;i<elements.length;++i)
+			elements[i].interact(j);
 		j.normalField(this);
 	}
 	
@@ -46,16 +53,29 @@ public class NormalField implements Field{
 	 * 
 	 * @param trap
 	 */
-	public void addTrap(Trap trap){
-		for(int i=0;i<this.elements.size();++i){
-			if(this.elements.get(i).gooType() || this.elements.get(i).oilType()){
-				if(((Trap)(this.elements.get(i))).compareType(trap)){
-					((Trap)(this.elements.get(i))).cleanup();
+	public boolean addTrap(Trap trap){
+		boolean alreadyHaveTrap=false;
+		Landable[] elements=this.elements.toArray(new Landable[this.elements.size()]);
+		for(int i=0;i<elements.length;++i){
+			if(elements[i].gooType() || elements[i].oilType()){
+				alreadyHaveTrap=true;
+				if(((Trap)(elements[i])).compareType(trap)){
+					((Trap)elements[i]).cleanup();
+					this.elements.add(trap);
+					trap.setNormalField(this);
+					return true;
 				}
 			}
 		}
-		this.elements.add(trap);
-		trap.setNormalField(this);
+		if(alreadyHaveTrap==false){//ha még semmilyen csapda nincs a mezõn, lerakja rá azt
+			this.elements.add(trap);
+			trap.setNormalField(this);
+			return true;
+		}
+		else{//ha egy másik típusú csapda van már a mezõn, akkor nem rakja le
+			trap.cleanup();//viszont listából ki kell szedni
+			return false;
+		}
 	}
 	
 	/**
@@ -63,7 +83,7 @@ public class NormalField implements Field{
 	 * @param l
 	 */
 	public void staying(Landable l){
-		
+		this.elements.add(0, l);
 	}
 //publikus metódusok vége
 }
