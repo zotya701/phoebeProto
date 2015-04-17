@@ -135,6 +135,14 @@ public class Map implements Printable{
 	}
 	
 	/**
+	 * Visszatér a pálya méretével
+	 * @return A pálya mérete
+	 */
+	public Point getSize(){
+		return this.size;
+	}
+	
+	/**
 	 * Kiszámolja a távolságot a pálya két pontja között, majd visszatér vele.
 	 * @param s Az egyik pont
 	 * @param d A másik pont
@@ -214,11 +222,11 @@ public class Map implements Printable{
             for (Edge e : u.getAdjacencies()){							//u minden szomszédjára
             	boolean robotOnNode=false;
             	Node v = e.getTarget();
-            	for(int i=0;i<GameManager.cleaners.size();++i){
+            	for(int i=0;i<GameManager.cleaners.size();++i){			// e miatt a takarítórobot el kerüli a többi takarítórobotot
             		if(GameManager.cleaners.get(i).getPosition().equals(v.getCoord()))
             			robotOnNode=true;
             	}
-            	for(int i=0;i<GameManager.robots.size();++i){
+            	for(int i=0;i<GameManager.robots.size();++i){			// e miatt a rendes robotokat kerüli el
             		if(GameManager.robots.get(i).getPosition().equals(v.getCoord()))
             			robotOnNode=true;
             	}
