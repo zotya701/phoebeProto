@@ -74,7 +74,7 @@ public class GameManager {
 				File robotsFile	=	new File(filename+".robots");
 				if(robotsFile.exists()){													//ha létezik a robotok adatait tartalmazó fájl
 					Robot.statid=0;															//új betöltésnél megint nulláról induljon
-					GameManager.robots.clear();													//ez sem árt, ha kiürítjük más robotok betöltése elõtt
+					GameManager.robots.clear();												//ez sem árt, ha kiürítjük más robotok betöltése elõtt
 					this.currentPlayer=0;
 					this.round=0;
 					GameManager.cleaners.clear();											//szintén
@@ -121,7 +121,7 @@ public class GameManager {
 						File robotsFile=new File(splittedCommand[1]);
 						if(robotsFile.exists()){													//ha létezik a robotok adatait tartalmazó fájl
 							Robot.statid=0;															//nem árt nullázni
-							GameManager.robots.clear();													//ezt sem árt üríteni
+							GameManager.robots.clear();												//ezt sem árt üríteni
 							BufferedReader BR = new BufferedReader(new FileReader(robotsFile));
 						    while(BR.ready()){														//amíg van adat a robotok adatait tartalmazó fájlban
 						    	String[] p=BR.readLine().split("\\s+");								//feldarabolja a beolvasott stringet space-enként
@@ -152,13 +152,13 @@ public class GameManager {
 								oils[j].roundElapsed();
 							}
 							int robotsAlive=0;
-							for(Robot r : GameManager.robots){						//megszámolja hány robot "él" még
+							for(Robot r : GameManager.robots){				//megszámolja hány robot "él" még
 								if(r.isAlive()){
 									robotsAlive=robotsAlive+1;
 								}
 							}
 							round=round+1;
-							if((round>=20 || robotsAlive<=1) && GameManager.robots.size()>=2 ){				//ha csak 1 robot él, vagy vége a játéknak (eltelt 20 kör)
+							if((round>=20 || robotsAlive<=1) && GameManager.robots.size()>=2 ){		//ha csak 1 robot él, vagy vége a játéknak (eltelt 20 kör)
 								this.end();
 							}
 						}
@@ -216,7 +216,7 @@ public class GameManager {
 				}
 	//listRobots
 				else if(command.equals("listRobots")){
-					for(Robot robot : GameManager.robots)			//konzolra kilistázza a robotokat
+					for(Robot robot : GameManager.robots)	//konzolra kilistázza a robotokat
 						robot.Print();
 				}
 	//listCleaners
@@ -288,12 +288,12 @@ public class GameManager {
 		float max=0;
 		int maxIndex=0;
 		for(int i=0;i<GameManager.robots.size();++i){
-			if(GameManager.robots.get(i).isAlive() && max<GameManager.robots.get(i).getRouteTravelled()){		//az "élõ" robotok közül megkeresi melyik robot tette meg a legtöbb távot
+			if(GameManager.robots.get(i).isAlive() && max<GameManager.robots.get(i).getRouteTravelled()){	//az "élõ" robotok közül megkeresi melyik robot tette meg a legtöbb távot
 				max=GameManager.robots.get(i).getRouteTravelled();
 				maxIndex=i;
 			}
 		}
-		System.out.println("Robot id:"+maxIndex+" nyert!");										//merthogy az a robot nyerte meg a játékot
+		System.out.println("Robot id:"+maxIndex+" nyert!");													//merthogy az a robot nyerte meg a játékot
 	}
 	
 	public static void main(String[] args){
