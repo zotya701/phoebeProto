@@ -1,8 +1,6 @@
 package phoebeProto;
 
 import java.awt.Point;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 
@@ -24,11 +22,6 @@ public class Goo implements Trap{
 	 * 
 	 */
 	private int health;
-
-	/**
-	 * 
-	 */
-	static private List<Trap> trapList=new ArrayList<Trap>();
 //privát adattagok vége
 	
 //publikus metódusok kezdete
@@ -38,14 +31,14 @@ public class Goo implements Trap{
 	public Goo(Point pos){
 		this.position=pos;
 		this.health=4;
-		Goo.trapList.add(this);
+		GameManager.trapList.add(this);
 	}
 
 	/**
 	 * 
 	 */
 	public void Print(){
-		System.out.println("Trap Goo ("+this.position.x+","+this.position.y+") health: "+this.health);
+		System.out.println("Trap goo ("+this.position.x+","+this.position.y+") health: "+this.health);
 	}
 
 	/**
@@ -54,6 +47,9 @@ public class Goo implements Trap{
 	 */
 	public void interact(Jumping j){
 		j.onGoo();
+		this.health	=	this.health-1;
+		if(this.health==0)
+			this.cleanup();
 	}
 
 	/**
@@ -75,8 +71,9 @@ public class Goo implements Trap{
 	 * 
 	 */
 	public void cleanup(){
-		this.currentField.left(this);
-		Goo.trapList.remove(this);
+		if(this.currentField!=null)
+			this.currentField.left(this);
+		GameManager.trapList.remove(this);
 	}
 
 	/**
@@ -107,13 +104,6 @@ public class Goo implements Trap{
 	 */
 	public Point getPosition(){
 		return this.position;
-	}
-
-	/**
-	 * 
-	 */
-	public List<Trap> trapList(){
-		return Goo.trapList;
 	}
 //publikus metódusok vége
 }
