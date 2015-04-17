@@ -32,7 +32,6 @@ public class Robot implements Landable, Jumping{
 	
 	/**
 	 *  A jelenlegi mezõ, amin épp van a robot.
-
 	 */
 	private NormalField currentField;
 	
@@ -43,13 +42,11 @@ public class Robot implements Landable, Jumping{
 	
 	/**
 	 * A még felhasználható ragacskészlet, amit a robot ugráskor maga mögött hagyhat.
-
 	 */
 	private  int gooTraps;
 	
 	/**
 	 * A még felhasználható olajkészlet, amit a robot ugráskor maga mögött hagyhat.
-
 	 */
 	private  int oilTraps;
 	
@@ -77,7 +74,7 @@ public class Robot implements Landable, Jumping{
 	/**
 	 * Konstruktor. Beállítja a pályát, a kezdõ pozíciót, és a sebességvektort.
 	 *  Regisztrálja magát a pálya megfelelõ mezõjére.
-
+	 *  
 	 * @param map A pálya referenciája
 	 * @param pos Kezdõpozíció
 	 * @param vel Kezdõ sebességvektor
@@ -90,7 +87,7 @@ public class Robot implements Landable, Jumping{
 		this.routeTravelled	=	0;
 		this.gooTraps		=	3;
 		this.oilTraps		=	3;
-		//this.onOil			=	false;
+		//this.onOil		=	false;
 		this.id				=	Robot.statid;
 		Robot.statid		=	Robot.statid+1;
 		this.map.getField(this.position).arrived(this);
@@ -98,6 +95,7 @@ public class Robot implements Landable, Jumping{
 	
 	/**
 	 * Meghívja a jumping onRobot() függvényét.
+	 * 
 	 * @param j A jumping objektum aki ráugrott a robotra.
 	 */
 	public void interact(Jumping j){
@@ -106,6 +104,7 @@ public class Robot implements Landable, Jumping{
 	
 	/**
 	 *  Beállítja a currentField attribútumot, meghívja a staying metódusát.
+	 *  
 	 * @param nf A NormalField amire érkezett a robot.
 	 */
 	public void normalField(NormalField nf){
@@ -124,6 +123,7 @@ public class Robot implements Landable, Jumping{
 			state="normal";
 		else if(this.state==RobotState.Unturnable)
 			state="unturnable";
+		//Robot id:<id> pos:(<posx>,<posy>) vel:(<velx>,<vely>) route: <route> goo:<goo> oil:<oil> state:<state>
 		System.out.println("Robot id:"+this.id+" pos:("+this.position.x+","+this.position.y+") vel:("+this.velocity.x+","+this.velocity.y+") route: "+this.routeTravelled+" goo:"+this.gooTraps+" oil:"+this.oilTraps+" state:"+state);					
 	}
 	
@@ -135,23 +135,24 @@ public class Robot implements Landable, Jumping{
 	}
 	
 	/**
-	 * Ugratja a robotot a pozíciója és sebességvektora alapján, majd visszatér az állapotával.
+	 * Ugratja a robotot a pozíciója és sebességvektora alapján.
+	 * 
 	 * @param modifierVelocity A sebességvektor változása
 	 */
 	public void jump(Point modifierVelocity){
-		if(this.state!=RobotState.Eliminated){
-			Point old=new Point(this.position);
-			this.currentField.left(this);
-			if(this.state!=RobotState.Unturnable){
+		if(this.state!=RobotState.Eliminated){															//csak akkor ugrohat a robot ha "él" még
+			Point old=new Point(this.position);															//el kell tárolni az ugrás elõtti pozícióját hogy ki lehessen számolni a megtett utat
+			this.currentField.left(this);																//el hagyja a jelenlegi mezõt
+			if(this.state!=RobotState.Unturnable){														//csak akkor módosítja a sebességvektort, ha módósítható
 				this.velocity.translate(modifierVelocity.x, modifierVelocity.y);
 			}
 			else {
 				this.state=RobotState.Normal;
 				//this.onOil=false;
 			}
-			this.position=this.map.getNewPos(this.position, this.velocity);
-			this.map.getField(this.position).arrived(this);
-			this.routeTravelled=this.routeTravelled+this.map.calculateDistance(old, this.position);
+			this.position=this.map.getNewPos(this.position, this.velocity);								//új pozíció lekérdezése a robot pozíciója és sebességvektora alapján
+			this.map.getField(this.position).arrived(this);												//a robot megérkezik az új mezõre, és interaktál annak elemeivel
+			this.routeTravelled=this.routeTravelled+this.map.calculateDistance(old, this.position);		//megtett út kiszámolása
 		}
 	}
 	
@@ -159,7 +160,8 @@ public class Robot implements Landable, Jumping{
 	 * Felezi a robot sebességét. Ha páratlan, lefelé kerekít.
 	 */
 	public void onGoo(){
-		this.halveSpeed();
+		this.velocity.x=this.velocity.x/2;
+		this.velocity.y=this.velocity.y/2;
 	}
 	
 	/**
@@ -183,10 +185,10 @@ public class Robot implements Landable, Jumping{
 	 * Lerak egy ragacsot a mezõre amin áll.
 	 */
 	public void placeGoo(){
-		if(this.gooTraps>0){
-			Goo goo=new Goo(this.position);
-			if(this.currentField.addTrap(goo))
-				this.gooTraps	=	this.gooTraps-1;
+		if(this.gooTraps>0){							//csak akkor rak le ragacsfoltot, ha van mit lerakni
+			Goo goo=new Goo(this.position);				
+			if(this.currentField.addTrap(goo))			//ha sikerült a lerakás
+				this.gooTraps	=	this.gooTraps-1;	//csökkenti a lerakható ragacsfoltok számát
 		}
 	}
 	
@@ -194,17 +196,20 @@ public class Robot implements Landable, Jumping{
 	 * Összehasonlítja a két egymással ütközött robot sebességét,
 	 *  majd a kisebb sebességût kiejti a játékból,
 	 *  a nagyobb sebessége pedig kettejük átlagsebessége lesz.
-
+	 *  
 	 * @param r A másik robot, evvel ütközik
 	 */
 	public void onRobot(Robot r){
-		if(r.getSpeed()>this.getSpeed()){
+		if(r.getSpeed()>this.getSpeed()){	//ha az ütközött robot sebessége nagyobb mint az ütközõé
+			//r.halveSpeed();
+			r.velocity.x=(r.velocity.x+this.velocity.x)/2;
+			r.velocity.y=(r.velocity.y+this.velocity.y)/2;
 			this.destroy();
-			r.halveSpeed();
 		}
 		else{
+			this.velocity.x=(r.velocity.x+this.velocity.x)/2;
+			this.velocity.y=(r.velocity.y+this.velocity.y)/2;
 			r.destroy();
-			this.halveSpeed();
 		}
 	}
 	
@@ -221,6 +226,7 @@ public class Robot implements Landable, Jumping{
 	
 	/**
 	 *  Visszaadja a robot aktuális sebességét.
+	 *  
 	 * @return A robot sebessége
 	 */
 	public float getSpeed(){
@@ -229,6 +235,7 @@ public class Robot implements Landable, Jumping{
 	
 	/**
 	 * Lekérdezi, hogy él-e még a robot
+	 * 
 	 * @return igaz ha él még a robot(Normal, vagy Unturnable), hamis ha Eliminated
 	 */
 	public boolean isAlive(){
@@ -239,6 +246,7 @@ public class Robot implements Landable, Jumping{
 	
 	/**
 	 * A robot eddig megtett távolságának lekérdezése
+	 * 
 	 * @return A távolság
 	 */
 	public float getRouteTravelled(){
@@ -247,6 +255,7 @@ public class Robot implements Landable, Jumping{
 	
 	/**
 	 * A robot kisrobotra ugrása, amit elpusztít
+	 * 
 	 * @param c A Cleaner amire ráugrott
 	 */
 	public void onCleaner(Cleaner c){
@@ -268,14 +277,6 @@ public class Robot implements Landable, Jumping{
 	public void destroy(){
 		this.state=RobotState.Eliminated;
 		this.currentField.left(this);
-	}
-	
-	/**
-	 * Sebességvektor felezése
-	 */
-	public void halveSpeed(){
-		this.velocity.x=this.velocity.x/2;
-		this.velocity.y=this.velocity.y/2;
 	}
 //publikus metódusok vége
 }
