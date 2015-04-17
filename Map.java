@@ -160,9 +160,9 @@ public class Map implements Printable{
 	 * @return Az útvonal elsõ pontja
 	 */
 	public Point getRouteToTrap(Cleaner c){
-		this.computePaths(this.nodes.get(c.getPosition().y).get(c.getPosition().x));										//a gráfban az adott takarítórobot helyéhez képest kiszámolja a legrövedd utakat az összes többi koordinátára
+		this.computePaths(this.nodes.get(c.getPosition().y).get(c.getPosition().x));					//a gráfban az adott takarítórobot helyéhez képest kiszámolja a legrövedd utakat az összes többi koordinátára
 		int min			=	Integer.MAX_VALUE;															//legközelebbi csapda kereséséhez
-		Point minPoint	=	new Point(c.getPosition());															//legközelebbi csapda koordinátájához
+		Point minPoint	=	new Point(c.getPosition());													//legközelebbi csapda koordinátájához
 		for(Trap trap : GameManager.trapList){															//megkeressük melyik csapdához lehet a legrövidebb úton elmenni
 			if(min>this.nodes.get(trap.getPosition().y).get(trap.getPosition().x).getMinDistance()){	//ha találtunk egy csapdát ahova rövidebb úton jutunk el mint az elõzõ csapdához,
 				min=this.nodes.get(trap.getPosition().y).get(trap.getPosition().x).getMinDistance();	//min értéke az szükséges út hossza lesz
@@ -171,9 +171,9 @@ public class Map implements Printable{
 			}
 		}
 		List<Node> shortestPath	=	this.getShortestPathTo(this.nodes.get(minPoint.y).get(minPoint.x));	//itt már megtaláltuk a legközelebbi csapdát, most visszakérjük a hozzá tartozó legrövidebb utat
-		if(shortestPath.size()>1)							//ha legalább 1 ugrás kell még a csapdáig
-			minPoint=shortestPath.get(1).getCoord();		//minPoint az út következõ koordinátája lesz
-		else minPoint=shortestPath.get(0).getCoord();		//a 0. elem mindig az ahol a takarító robot áll. ha erre állítja be minPointot, az azt jelenti, hogy egy csapdán áll
+		if(shortestPath.size()>1)																		//ha legalább 1 ugrás kell még a csapdáig
+			minPoint=shortestPath.get(1).getCoord();													//minPoint az út következõ koordinátája lesz
+		else minPoint=shortestPath.get(0).getCoord();													//a 0. elem mindig az ahol a takarító robot áll. ha erre állítja be minPointot, az azt jelenti, hogy egy csapdán áll
 		return minPoint;
 	}
 	
