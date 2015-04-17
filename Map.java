@@ -209,15 +209,26 @@ public class Map implements Printable{
 
 		while (!NodeQueue.isEmpty()) {									//amíg van meg nem látogatott csúcs
 		    Node u = NodeQueue.poll();									//u a lista elsõ eleme lesz, és egyben törlõdik is ez az elem a listábõl
-            for (Edge e : u.getAdjacencies()){							//u minden szomszédjára						
-                Node v = e.getTarget();
-                int distanceThroughU = u.getMinDistance() + 1;
-				if (distanceThroughU < v.getMinDistance()) {			//ha talált egy rövidebb utat s bõl u egyik szomszédjára
-				    NodeQueue.remove(v);								//a szomszédot kiveszi a listából
-				    v.setMinDistance(distanceThroughU);					//beállítja az új távolságot
-				    v.setPrevious(u);									//és hogy ide eljussunk melyik az elõzõ csúcs
-				    NodeQueue.add(v);									//majd visszarakja  a listába
-				}
+            for (Edge e : u.getAdjacencies()){							//u minden szomszédjára
+            	boolean robotOnNode=false;
+            	Node v = e.getTarget();
+            	for(int i=0;i<GameManager.cleaners.size();++i){
+            		if(GameManager.cleaners.get(i).getPosition().equals(v.getCoord()))
+            			robotOnNode=true;
+            	}
+            	for(int i=0;i<GameManager.robots.size();++i){
+            		if(GameManager.robots.get(i).getPosition().equals(v.getCoord()))
+            			robotOnNode=true;
+            	}
+            	if(robotOnNode==false){
+                    int distanceThroughU = u.getMinDistance() + 1;
+    				if (distanceThroughU < v.getMinDistance()) {			//ha talált egy rövidebb utat s bõl u egyik szomszédjára
+    				    NodeQueue.remove(v);								//a szomszédot kiveszi a listából
+    				    v.setMinDistance(distanceThroughU);					//beállítja az új távolságot
+    				    v.setPrevious(u);									//és hogy ide eljussunk melyik az elõzõ csúcs
+    				    NodeQueue.add(v);									//majd visszarakja  a listába
+    				}
+            	}
             }
 		}
     }
