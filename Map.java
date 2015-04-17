@@ -115,7 +115,10 @@ public class Map implements Printable{
 	 * @return
 	 */
 	public Field getField(Point coord){
-		return fields.get(coord.y).get(coord.x);
+		if(coord.x<0 || coord.y<0 || coord.x>=this.size.x || coord.y>=this.size.y){
+			return this.outside;
+		}
+		else return fields.get(coord.y).get(coord.x);
 	}
 	
 	/**
