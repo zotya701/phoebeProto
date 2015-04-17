@@ -4,35 +4,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
+ * Ezek azok a Field-ek, amikre ugorva a robot játékban marad. 
+ * Felelõs azért, hogy tudja milyen objektumok vannak a mezõn rajta.
  */
 public class NormalField implements Field{
 	
 //privát adattagok kezdete
 	/**
-	 * 
+	 *  Landable interfészt megvalósító objektumokat tartalmaz, 
+	 *  amikkel a robotok a mezõre ugráskor interakcióba lépnek.
 	 */
 	private List<Landable> elements;
 //privát adattagok vége
 	
 //publikus metódusok kezdete
 	/**
-	 * 
+	 * Konstruktor, létrehozza az elements tömböt.
 	 */
 	public NormalField(){
 		this.elements	=	new ArrayList<Landable>();
 	}
 	
 	/**
-	 * 
+	 *  Az objektum attribútumainak kiíratása a teszteléshez.
 	 */
 	public void Print() {
 		System.out.print("0");
 	}
 	
 	/**
-	 * 
-	 * @param j
+	 * Meghívja az összes rajta lévõ objektumnak az interact függvényét, 
+	 * majd a kapott objektum normalField függvényét, saját referenciáját átadva.
+	 * @param j A mezõre érkezõ objektum
 	 */
 	public void arrived(Jumping j) {
 		Landable[] elements=this.elements.toArray(new Landable[this.elements.size()]);	//így nem fog gondot okozni, ha az elements elemein való interaktálás esetén törlõdne az elem
@@ -42,16 +45,17 @@ public class NormalField implements Field{
 	}
 	
 	/**
-	 * 
-	 * @param l
+	 * Törli a kapott Jumping interfészt megvalósító objektumot az elementsbõl.
+	 * @param l A Landable amit törölnie kell
 	 */
 	public void left(Landable l){
 		this.elements.remove(l);
 	}
 	
 	/**
-	 * 
-	 * @param trap
+	 * Csapdát helyez el a mezõn (ragacsfoltot vagy olajfoltot), 
+	 * vagyis hozzáadja a trap objektumot az elements végére
+	 * @param trap A csapda amit bele kell raknia az elements-be
 	 */
 	public boolean addTrap(Trap trap){
 		boolean alreadyHaveTrap=false;													//feltételezzük, hogy nincs csapda az adott mezõn
@@ -81,8 +85,8 @@ public class NormalField implements Field{
 	}
 	
 	/**
-	 * 
-	 * @param l
+	 * Landable objektum hozzáadása az elements elejére.
+	 * @param l Ezt adjuk hozzá
 	 */
 	public void staying(Landable l){
 		this.elements.add(0, l);
