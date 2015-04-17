@@ -1,8 +1,6 @@
 package phoebeProto;
 
 import java.awt.Point;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 
@@ -24,16 +22,6 @@ public class Oil implements Trap{
 	 * 
 	 */
 	private int health;
-
-	/**
-	 * 
-	 */
-	static private List<Oil> oilList=new ArrayList<Oil>();
-	
-	/**
-	 * 
-	 */
-	static private List<Trap> trapList=new ArrayList<Trap>();
 //privát adattagok vége
 	
 //publikus metódusok kezdete
@@ -41,17 +29,28 @@ public class Oil implements Trap{
 	 * 
 	 */
 	public Oil(Point pos){
-		this.position=pos;
-		this.health=10;
-		Oil.trapList.add(this);
-		Oil.oilList.add(this);
+		this.position	=	pos;
+		this.health		=	10;
+		GameManager.trapList.add(this);
+		GameManager.oilList.add(this);
 	}
 
 	/**
 	 * 
 	 */
 	public void Print(){
-		System.out.println("Trap Oil ("+this.position.x+","+this.position.y+") health: "+this.health);
+		//Trap <type> (<x>,<y>) health: <health>
+		System.out.println("Trap oil ("+this.position.x+","+this.position.y+") health: "+this.health);
+	}
+	
+	/**
+	 * 
+	 */
+	public void roundElapsed(){
+		this.health=this.health-1;		//minden körben 1-el csökken az élete
+		if(this.health==0){				//ha elérte a 0-át
+			this.cleanup();				//akkor "felszárad"
+		}
 	}
 
 	/**
@@ -81,9 +80,10 @@ public class Oil implements Trap{
 	 * 
 	 */
 	public void cleanup(){
-		this.currentField.left(this);
-		Oil.trapList.remove(this);
-		Oil.oilList.remove(this);
+		if(this.currentField!=null)
+			this.currentField.left(this);	//törli magát a mezõrõl amin van
+		GameManager.trapList.remove(this);	//a csapdák listájából is törli magát
+		GameManager.oilList.remove(this);	//az olajfoltok listájából is törli magát
 	}
 
 	/**
@@ -114,13 +114,6 @@ public class Oil implements Trap{
 	 */
 	public Point getPosition(){
 		return this.position;
-	}
-
-	/**
-	 * 
-	 */
-	public List<Trap> trapList(){
-		return Oil.trapList;
 	}
 //publikus metódusok vége
 }
