@@ -11,37 +11,39 @@ import java.util.List;
 import java.util.PriorityQueue;
 
 /**
- * 
+ * A játék pályájának tárolása, robotok új pozíciójának kiszámolása 
+ * a robot jelenlegi pozíciójának és sebességvektorának függvényében, 
+ * robotok ugráskor megtett távolságának kiszámítása.
  */
 public class Map implements Printable{
 	
 //privát adattagok kezdete
 	/**
-	 * 
+	 * Referenciát tárol a pálya mezõire.
 	 */
 	private List<List<Field>> fields;
 
 	/**
-	 * 
+	 * Csomópontok az útvonalkereséshez.
 	 */
 	private List<List<Node>> nodes;
 
 	/**
-	 * 
+	 * A pálya mérete.
 	 */
 	private Point size;
 	
 	/**
-	 * 
+	 *  Referencia a pályán kívül esõ mezõket reprezentáló objektumra.
 	 */
 	private OutsideField outside;
 //privát adattagok vége
 
 //publikus metódusok kezdete
 	/**
-	 * 
-	 * @param filename
-	 * @param trapList
+	 * Konstruktor. Betölti a pályát a filename nevû fájlból, 
+	 * és elhelyezi a mezõkön a csapdákat, ha vannak rajtuk.
+	 * @param filename A fájl neve amibõl betöltjük a pályát
 	 */
 	public Map(String filename){
 		this.outside	=	new OutsideField();
@@ -97,7 +99,7 @@ public class Map implements Printable{
 	}
 	
 	/**
-	 * 
+	 * Az objektum attribútumainak kiíratása a teszteléshez.
 	 */
 	public void Print(){
 		System.out.println(this.size.x+" "+this.size.y);
@@ -110,9 +112,9 @@ public class Map implements Printable{
 	}
 	
 	/**
-	 * 
-	 * @param coord
-	 * @return
+	 * Visszatér a coord helyen található mezõvel.
+	 * @param coord A mezõ koordinátái amit le akarunk kérdezni
+	 * @return A megfelelõ koordinátán lévõ mezõvel tér vissza
 	 */
 	public Field getField(Point coord){
 		if(coord.x<0 || coord.y<0 || coord.x>=this.size.x || coord.y>=this.size.y){		//kivételt dobna, ha pályán kívüli mezõt kérnénk le
@@ -122,10 +124,10 @@ public class Map implements Printable{
 	}
 	
 	/**
-	 * 
-	 * @param currentPos
-	 * @param vel
-	 * @return
+	 * Kiszámolja az új pozíciót currentPos és vel szerint, majd visszatér vele.
+	 * @param currentPos A kezdõpozíció
+	 * @param vel A sebességvektor
+	 * @return A kezdõpozíció és a sebességvektor alapján kiszámított koordináta
 	 */
 	public Point getNewPos(Point currentPos, Point vel){
 		currentPos.translate(vel.x, vel.y);		//új pózíciót megkapjuk akkor, ha a régit eltoljuk a sebesség vektorral
@@ -133,10 +135,10 @@ public class Map implements Printable{
 	}
 	
 	/**
-	 * 
-	 * @param s
-	 * @param d
-	 * @return
+	 * Kiszámolja a távolságot a pálya két pontja között, majd visszatér vele.
+	 * @param s Az egyik pont
+	 * @param d A másik pont
+	 * @return A két pont közötti távolság
 	 */
 	public float calculateDistance(Point s, Point d){
 		//szokásos gyökalatt(x^2+y^2) miután d vektorból kivontuk s vektort, azaz s->d vektor hossza (source, destination)
@@ -145,14 +147,14 @@ public class Map implements Printable{
 	}
 	
 	/**
-	 * 
-	 * @param source
-	 * @return
+	 * Kiszámolja egy adott kisrobottól a legrövidebb útvonalat a legközelebbi csapdához dijkstra algoritmusát használva.
+	 * @param c A kisrobot
+	 * @return Az útvonal elsõ pontja
 	 */
-	public Point getRouteToTrap(Point source, Cleaner c){
-		this.computePaths(this.nodes.get(source.y).get(source.x));										//a gráfban az adott takarítórobot helyéhez képest kiszámolja a legrövedd utakat az összes többi koordinátára
+	public Point getRouteToTrap(Cleaner c){
+		this.computePaths(this.nodes.get(c.getPosition().y).get(c.getPosition().x));										//a gráfban az adott takarítórobot helyéhez képest kiszámolja a legrövedd utakat az összes többi koordinátára
 		int min			=	Integer.MAX_VALUE;															//legközelebbi csapda kereséséhez
-		Point minPoint	=	new Point(source);															//legközelebbi csapda koordinátájához
+		Point minPoint	=	new Point(c.getPosition());															//legközelebbi csapda koordinátájához
 		for(Trap trap : GameManager.trapList){															//megkeressük melyik csapdához lehet a legrövidebb úton elmenni
 			if(min>this.nodes.get(trap.getPosition().y).get(trap.getPosition().x).getMinDistance()){	//ha találtunk egy csapdát ahova rövidebb úton jutunk el mint az elõzõ csapdához,
 				min=this.nodes.get(trap.getPosition().y).get(trap.getPosition().x).getMinDistance();	//min értéke az szükséges út hossza lesz
@@ -168,7 +170,7 @@ public class Map implements Printable{
 	}
 	
 	/**
-	 * 
+	 * Az útvonalkereséshez a gráf létrhozása.
 	 */
 	public void createGraph(List<String> lines){
 		for(int y=0;y<this.size.y;++y){
@@ -192,8 +194,8 @@ public class Map implements Printable{
 	}
 	
 	/**
-	 * 
-	 * @param source
+	 * Az útvonal kiszámítása
+	 * @param source A kiindulási pont
 	 */
 	public void computePaths(Node source){
 		for(int y=0;y<this.size.y;++y){			//alaphelyzetbe állítja a gráfot
@@ -234,9 +236,10 @@ public class Map implements Printable{
     }
 	
 	/**
-	 * 
-	 * @param target
-	 * @return
+	 * A source és a target közötti legrövidebb útvonal lekérdezése.
+	 * @param target Az utolsó Node 
+	 * (minden Node tartalmazza a legrövidebb úton belül az elõzõ Node-t, így megyünk végig a láncolt listán)
+	 * @return A legrövidebb útvonal csomópontjaiból álló listával tér vissza.
 	 */
     public List<Node> getShortestPathTo(Node target){
         List<Node> path = new ArrayList<Node>();
