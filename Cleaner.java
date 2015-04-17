@@ -190,5 +190,13 @@ public class Cleaner implements Landable, Jumping{
 	public void setTarget(Trap trap){
 		this.target=trap;
 	}
+	
+	/**
+	 * Visszatér a takarítorobot pozíciójával
+	 * @return A takarítórobot pozíciója
+	 */
+	public Point getPosition(){
+		return this.position;
+	}
 //publikus metódusok vége
 }
