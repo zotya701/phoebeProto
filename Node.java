@@ -105,7 +105,7 @@ public class Node implements Comparable<Node>{
 	 * @return Az összehasonlítás eredménye
 	 */
 	public int compareTo(Node other){
-		return Integer.compare(minDistance, other.getMinDistance());
+		return Integer.valueOf(this.minDistance).compareTo(Integer.valueOf(other.getMinDistance()));
 	}
 //publikus metódusok vége
 }
