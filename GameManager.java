@@ -62,7 +62,7 @@ public class GameManager {
 	 */
 	public GameManager(){
 		this.currentPlayer		=	0;
-		this.round				=	0;
+		this.round				=	1;
 		this.map				=	new Map("test.map");
 	}
 
@@ -79,7 +79,7 @@ public class GameManager {
 					Robot.statid=0;															//új betöltésnél megint nulláról induljon
 					GameManager.robots.clear();												//ez sem árt, ha kiürítjük más robotok betöltése elõtt
 					this.currentPlayer=0;
-					this.round=0;
+					this.round=1;
 					GameManager.cleaners.clear();											//szintén
 					BufferedReader BR	=	new BufferedReader(new FileReader(robotsFile));
 				    while(BR.ready()){														//amíg van adat a robotok adatait tartalmazó fájlban
@@ -154,6 +154,13 @@ public class GameManager {
 							for(int j=0;j<oils.length;++j){					//mindegyik olajfolt "életét" csökkenti egyel
 								oils[j].roundElapsed();
 							}
+							if(round%10==0){								//minden 10. körben tisztítórobotok jutnak be a pályára bal szélrõl
+								for(int y=4;y<this.map.getSize().y;y=y+10){	//a megadott helyekre
+									if(GameManager.cleaners.size()<10){		//de 10nél több egyszerre nem lehet a pályán
+										GameManager.cleaners.add(new Cleaner(this.map, new Point(0, y)));
+									}
+								}
+							}
 							int robotsAlive=0;
 							for(Robot r : GameManager.robots){				//megszámolja hány robot "él" még
 								if(r.isAlive()){
@@ -161,7 +168,7 @@ public class GameManager {
 								}
 							}
 							round=round+1;
-							if((round>=20 || robotsAlive<=1) && GameManager.robots.size()>=2 ){		//ha csak 1 robot él, vagy vége a játéknak (eltelt 20 kör)
+							if((round>20 || robotsAlive<=1) && GameManager.robots.size()>=2 ){		//ha csak 1 robot él, vagy vége a játéknak (eltelt 20 kör)
 								this.end();
 							}
 						}
@@ -262,13 +269,20 @@ public class GameManager {
 			for(int j=0;j<oils.length;++j){
 				oils[j].roundElapsed();
 			}
+			if(round%10==0){
+				for(y=4;y<this.map.getSize().y;y=y+10){
+					if(GameManager.cleaners.size()<10){
+						GameManager.cleaners.add(new Cleaner(this.map, new Point(0, y)));
+					}
+				}
+			}
 			int robotsAlive=0;
 			for(Robot r : GameManager.robots){
 				if(r.isAlive()){
 					robotsAlive=robotsAlive+1;
 				}
 			}
-			if(round>=20 || robotsAlive<=1){
+			if(round>20 || robotsAlive<=1){
 				this.end();
 			}
 			
