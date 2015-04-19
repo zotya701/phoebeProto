@@ -174,7 +174,8 @@ public class Map implements Printable{
 		if(shortestPath.size()>1)																		//ha legalább 1 ugrás kell még a csapdáig
 			minPoint=shortestPath.get(1).getCoord();													//minPoint az út következõ koordinátája lesz
 		else minPoint=shortestPath.get(0).getCoord();													//a 0. elem mindig az ahol a takarító robot áll. ha erre állítja be minPointot, az azt jelenti, hogy egy csapdán áll
-		return minPoint;
+		Point dir	=	new Point(minPoint.x-c.getPosition().x, minPoint.y-c.getPosition().y);
+		return dir;
 	}
 	
 	/**
@@ -222,14 +223,14 @@ public class Map implements Printable{
             for (Edge e : u.getAdjacencies()){							//u minden szomszédjára
             	boolean robotOnNode=false;
             	Node v = e.getTarget();
-            	for(int i=0;i<GameManager.cleaners.size();++i){			// e miatt a takarítórobot el kerüli a többi takarítórobotot
-            		if(GameManager.cleaners.get(i).getPosition().equals(v.getCoord()))
-            			robotOnNode=true;
-            	}
-            	for(int i=0;i<GameManager.robots.size();++i){			// e miatt a rendes robotokat kerüli el
-            		if(GameManager.robots.get(i).getPosition().equals(v.getCoord()))
-            			robotOnNode=true;
-            	}
+            	//for(int i=0;i<GameManager.cleaners.size();++i){			// e miatt a takarítórobot el kerüli a többi takarítórobotot és nem fog ütközni velük
+            	//	if(GameManager.cleaners.get(i).getPosition().equals(v.getCoord()))
+            	//		robotOnNode=true;
+            	//}
+            	//for(int i=0;i<GameManager.robots.size();++i){			// e miatt a rendes robotokat kerüli el	és nem fog ütközni velük
+            	//	if(GameManager.robots.get(i).getPosition().equals(v.getCoord()))
+            	//		robotOnNode=true;
+            	//}
             	if(robotOnNode==false){
                     int distanceThroughU = u.getMinDistance() + 1;
     				if (distanceThroughU < v.getMinDistance()) {			//ha talált egy rövidebb utat s bõl u egyik szomszédjára

@@ -22,6 +22,11 @@ public class Cleaner implements Landable, Jumping{
 	 *A takarítórobot pozíciója a pályán
 	 */
 	private Point position;
+	
+	/**
+	 * A takarítórobot iránya
+	 */
+	private Point dir;
 
 	/**
 	 * Referencia a mezõre ahol épp tartózkodik a kisrobot
@@ -52,6 +57,7 @@ public class Cleaner implements Landable, Jumping{
 		this.state			=	RobotState.Normal;
 		this.map			=	map;
 		this.position		=	pos;
+		this.dir			=	new Point(0, 0);
 		this.cleaningStage	=	0;
 		this.target			=	null;
 		this.map.getField(this.position).arrived(this);
@@ -86,13 +92,13 @@ public class Cleaner implements Landable, Jumping{
 		if(this.state!=RobotState.Eliminated){						//csak akkor lép, ha "él"
 			Point oldPos	=	new Point(this.position);
 			this.currentField.left(this);							//elhagyja a mezõt amin áll
-			if(this.state==RobotState.Normal){						//csak akkor, ha normál állapotban van
-				this.position	=	this.map.getRouteToTrap(this);	//lekéri a map-tõl az új pozícióját
-				map.getField(this.position).arrived(this);			//megérkezik az új mezõre
+			this.dir	=	this.map.getRouteToTrap(this);			//új irány lekérése
+			if(this.state==RobotState.Unturnable) {					//csak ha elötte körben ütközött
+				this.state=RobotState.Normal;						//ebben a körben már megint normal az állapota
+				this.dir	=	new Point(-this.dir.y, this.dir.x);	//90fokkal jobbra forgatja az irányát
 			}
-			else {													//ilyenkor csak unturnable állapotban lehet
-				this.state=RobotState.Normal;						//ekkor a takarítorobot nem mozdult, de a következõ körben már fog
-			}
+			this.position.translate(this.dir.x, this.dir.y);		//irány alapján beállítja az új pozíciót
+			map.getField(this.position).arrived(this);				//megérkezik az új mezõre
 			if(this.target!=null){									//csak akkor ha van egyáltalán target
 				if(target.getPosition().equals(oldPos)){			//és annak pozíciója megegyezik a takarítórobot pozíciójával
 																	//azért a lépés elõtti pozíciója, mert amikor ráugrik még nem takarít, csak a következõ körben
